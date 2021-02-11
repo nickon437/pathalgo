@@ -1,0 +1,28 @@
+html {
+  box-sizing: border-box;
+}
+
+#board {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #333;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  border: 1px solid #333;
+  height: 30px;
+  width: 30px;
+  /* background-color: white;; */
+}
+
+.start {
+  background-color: royalblue;
+}
+
+.target {
+  background-color: brown;
+}
