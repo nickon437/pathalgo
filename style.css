@@ -18,15 +18,18 @@ html {
   width: 30px;
 }
 
-.wall {
+.wall.cell::before {
   background-color: #333;
+  transform: scale(100%);
+  border-radius: 0;
+  transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .start {
   background-color: royalblue;
 }
 
-.start.visited::before {
+.start.visited.cell::before {
   animation: none;
 }
 
@@ -39,25 +42,27 @@ html {
   transition: background-color 0.3s ease;
 }
 
-.path.visited::before {
+.path.visited.cell::before {
   animation: none;
 }
 
-.visited {
+.visited{
   position: relative;
-  overflow: hidden;
   border-color: white;
 }
 
-.visited::before {
+.cell::before {
   content: "";
   position: absolute;
-  animation: visit 2s ease forwards;
   border-radius: 50%;
-  background-color: #4a64a4;
   width: 30px;
   height: 30px;
   transform: scale(0);
+}
+
+.visited.cell::before {
+  animation: visit 2s ease forwards;
+  background-color: #4a64a4;
 }
 
 @keyframes visit {
@@ -65,7 +70,7 @@ html {
     border-radius: 20%;
     background-color: #6ce4bb;
     transform: scale(100%);
-    box-shadow: 0 0 0 3px #2ec8a8;
+    box-shadow: 0 0 0 2px #2ec8a8;
   }
   100% {
     border-radius: 0;
