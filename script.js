@@ -119,7 +119,6 @@ const mapBoarArr = () => {
       cell.onclick = () => {
         if (!start) {
           start = cell;
-          queue.push(cell);
           cell.classList.add('start');
         } else if (!target && cell !== start) {
           target = cell;
@@ -204,6 +203,7 @@ const mapNeighBours = () => {
 
 document.querySelector('button').addEventListener('click', () => {
   if (start && target) {
+    queue.push(start);
     setInterval(search, TIME_DELAY);
   }
 });
