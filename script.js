@@ -63,7 +63,7 @@ const mapBoarArr = () => {
           start = cell;
           queue.push(cell);
           cell.classList.add('start');
-        } else if (!target) {
+        } else if (!target && cell !== start) {
           target = cell;
           cell.classList.add('target');
         }
@@ -76,14 +76,14 @@ const mapBoarArr = () => {
       
       cell.onmouseup = () => {
         isMouseDown = false;
-        if (start && target) {
+        if (start && target && cell !== start && cell !== target) {
           cell.isWall = true;
           cell.classList.add('wall');
         }
       }
       
       cell.onmouseenter = () => {
-        if (start && target && isMouseDown) {
+        if (start && target && cell !== start && cell !== target && isMouseDown) {
           cell.isWall = true;
           cell.classList.add('wall');
         }
