@@ -22,6 +22,9 @@ let hasPath = false;
 const path = [];
 
 let isMouseDown = false;
+let isMovingStart = false;
+
+let lastMouseEnteredCell;
 
 const backTrack = (cell) => {
   setTimeout(() => {
@@ -126,26 +129,48 @@ const mapBoarArr = () => {
 
       cell.onmousedown = () => {
         isMouseDown = true;
-      };
-
-      cell.onmouseup = () => {
-        isMouseDown = false;
-        if (start && target && cell !== start && cell !== target) {
-          cell.isWall = true;
-          cell.classList.add('wall');
+        if (cell === start) {
+          isMovingStart = true;
         }
       };
 
-      cell.onmouseenter = () => {
+      cell.onmouseup = () => {
         if (
           start &&
           target &&
           cell !== start &&
           cell !== target &&
-          isMouseDown
+          !isMovingStart
         ) {
           cell.isWall = true;
           cell.classList.add('wall');
+        }
+        isMouseDown = false;
+        isMovingStart = false;
+      };
+
+      cell.onmouseenter = () => {
+        if (start && target && isMouseDown) {
+          if (isMovingStart) {
+            start = cell === target ? lastMouseEnteredCell : cell;
+            start.classList.add('start');
+            start.classList.remove('wall');
+          } else {
+            if (cell !== start) {
+              cell.isWall = true;
+              cell.classList.add('wall');
+            }
+          }
+        }
+      };
+
+      cell.onmouseleave = () => {
+        lastMouseEnteredCell = cell;
+        if (isMovingStart) {
+          start.classList.remove('start');
+          if (start.isWall) {
+            start.classList.add('wall');
+          }
         }
       };
     });
