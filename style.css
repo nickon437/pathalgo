@@ -30,6 +30,15 @@ html {
   background-color: brown;
 }
 
+.path.visited {
+  background-color: tomato;
+  transition: background-color 0.3s ease;
+}
+
+.path.visited::before {
+  animation: none;
+}
+
 .visited {
   position: relative;
   overflow: hidden;
@@ -38,7 +47,7 @@ html {
 .visited::before {
   content: "";
   position: absolute;
-  animation: visit 1.5s ease forwards;
+  animation: visit 2s ease forwards;
   border-radius: 50%;
   background-color: cyan;
   width: 30px;

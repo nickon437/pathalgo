@@ -19,6 +19,7 @@ const queue = [];
 const TIME_DELAY = 20;
 
 let hasPath = false;
+const path = [];
 
 const search = () => {
   if (queue.length > 0 && !hasPath) {
@@ -102,28 +103,37 @@ buildBoard();
 mapBoarArr();
 mapNeighBours();
 
-const backTrack = () => {};
+const backTrack = (cell) => {
+  setTimeout(() => {
+    if (cell !== start) {
+      cell.classList.add('path');
+      backTrack(cell.previous);
+    }
+  }, 100);
+};
 
-const visitCell = (cell) => {
+const visitCell = (previous, cell) => {
   if (cell && !cell.isVisited) {
     cell.isVisited = true;
+    cell.previous = previous;
+
     cell.classList.add('visited');
     queue.push(cell);
     if (cell === target) {
       // console.log('sameCell');
       // clearInterval(search);
       hasPath = true;
-      return backTrack();
+      return backTrack(target);
     }
   }
 };
 
 const visitNeighCells = (cell) => {
   const { north, east, south, west } = cell.neigh;
-  visitCell(north);
-  visitCell(east);
-  visitCell(south);
-  visitCell(west);
+  visitCell(cell, north);
+  visitCell(cell, east);
+  visitCell(cell, south);
+  visitCell(cell, west);
 
   // if (hasPath) {
   //   console.log('hasPath');
