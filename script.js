@@ -23,6 +23,7 @@ const path = [];
 
 let isMouseDown = false;
 let isMovingStart = false;
+let isMovingTarget = false;
 
 let lastMouseEnteredCell;
 
@@ -124,6 +125,8 @@ const mapBoarArr = () => {
         isMouseDown = true;
         if (cell === start) {
           isMovingStart = true;
+        } else if (cell === target) {
+          isMovingTarget = true;
         }
       };
 
@@ -134,6 +137,7 @@ const mapBoarArr = () => {
         }
         isMouseDown = false;
         isMovingStart = false;
+        isMovingTarget = false;
       };
 
       cell.onmouseenter = () => {
@@ -142,8 +146,12 @@ const mapBoarArr = () => {
             start = cell === target ? lastMouseEnteredCell : cell;
             start.classList.add('start');
             start.classList.remove('wall');
+          } else if (isMovingTarget) {
+            target = cell === start ? lastMouseEnteredCell : cell;
+            target.classList.add('target');
+            target.classList.remove('wall');
           } else {
-            if (cell !== start) {
+            if (cell !== start && cell !== target) {
               cell.isWall = true;
               cell.classList.add('wall');
             }
@@ -159,6 +167,12 @@ const mapBoarArr = () => {
             start.classList.add('wall');
           }
           start = null; 
+        } else if (isMovingTarget) {
+          target.classList.remove('target');
+          if (target.isWall) {
+            target.classList.add('wall');
+          }
+          target = null; 
         }
       };
     });
