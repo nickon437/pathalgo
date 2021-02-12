@@ -73,7 +73,7 @@ const search = () => {
   }
 };
 
-const buildBoard = () => {
+const calculateBoardSize = () => {
   const getLength = (cssAttribute) => {
     return jBoard.css(cssAttribute).replace('px', '');
   };
@@ -91,6 +91,10 @@ const buildBoard = () => {
       getLength('padding-bottom')) /
       30
   );
+};
+
+const buildBoard = () => {
+  calculateBoardSize();
 
   let rowInnerHTML = '';
   for (let i = 0; i < numRow; i++) {
@@ -116,16 +120,6 @@ const mapBoarArr = () => {
       cell.location.rowIndex = rowIndex;
       cell.location.colIndex = colIndex;
 
-      cell.onclick = () => {
-        if (!start) {
-          start = cell;
-          cell.classList.add('start');
-        } else if (!target && cell !== start) {
-          target = cell;
-          cell.classList.add('target');
-        }
-      };
-
       cell.onmousedown = () => {
         isMouseDown = true;
         if (cell === start) {
@@ -134,13 +128,7 @@ const mapBoarArr = () => {
       };
 
       cell.onmouseup = () => {
-        if (
-          start &&
-          target &&
-          cell !== start &&
-          cell !== target &&
-          !isMovingStart
-        ) {
+        if (cell !== start && cell !== target && !isMovingStart) {
           cell.isWall = true;
           cell.classList.add('wall');
         }
@@ -149,7 +137,7 @@ const mapBoarArr = () => {
       };
 
       cell.onmouseenter = () => {
-        if (start && target && isMouseDown) {
+        if (isMouseDown) {
           if (isMovingStart) {
             start = cell === target ? lastMouseEnteredCell : cell;
             start.classList.add('start');
@@ -170,6 +158,7 @@ const mapBoarArr = () => {
           if (start.isWall) {
             start.classList.add('wall');
           }
+          start = null; 
         }
       };
     });
@@ -201,6 +190,14 @@ const mapNeighBours = () => {
   }
 };
 
+const addStartAndTarget = () => {
+  start = boardArr[Math.floor(numRow / 2)][Math.floor(numCol / 3)];
+  target = boardArr[Math.floor(numRow / 2)][Math.floor((numCol * 2) / 3)];
+
+  start.classList.add('start');
+  target.classList.add('target');
+};
+
 document.querySelector('button').addEventListener('click', () => {
   if (start && target) {
     queue.push(start);
@@ -211,3 +208,4 @@ document.querySelector('button').addEventListener('click', () => {
 buildBoard();
 mapBoarArr();
 mapNeighBours();
+addStartAndTarget();
