@@ -46,6 +46,7 @@ html {
 .visited {
   position: relative;
   overflow: hidden;
+  border-color: white;
 }
 
 .visited::before {
@@ -53,16 +54,23 @@ html {
   position: absolute;
   animation: visit 2s ease forwards;
   border-radius: 50%;
-  background-color: cyan;
+  background-color: #4a64a4;
   width: 30px;
   height: 30px;
   transform: scale(0);
 }
 
 @keyframes visit {
-  to {
+  80% {
     border-radius: 20%;
-    background-color: teal;
-    transform: scale(90%);
+    background-color: #6ce4bb;
+    transform: scale(100%);
+    box-shadow: 0 0 0 3px #2ec8a8;
+  }
+  100% {
+    border-radius: 0;
+    background-color: #67d1e6;
+    transform: scale(100%);
+    box-shadow: 0 0 0 0 #2ec8a8;
   }
 }
