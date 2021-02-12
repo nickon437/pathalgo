@@ -1,11 +1,29 @@
-html {
+* {
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+  /* width: 100%; */
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  /* overflow: auto; */
+}
+
+#control-panel {
+  height: 10%;
+  padding: 20px;
+}
+
 #board {
+  padding: 20px;
   display: flex;
   flex-direction: column;
   border: 1px solid #ccc;
+  height: 90%;
 }
 
 .row {

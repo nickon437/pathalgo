@@ -1,9 +1,8 @@
 const board = $('#board');
 const boardArr = [];
 
-const numRow = 20;
-const numCol = 20;
-
+let numRow = 20;
+let numCol = 20;
 
 let start;
 let target;
@@ -23,100 +22,6 @@ let hasPath = false;
 const path = [];
 
 let isMouseDown = false;
-
-const search = () => {
-  if (queue.length > 0 && !hasPath) {
-    visitNeighCells(queue[0]);
-    queue.shift();
-  } else {
-    clearInterval(search);
-  }
-};
-
-const buildBoard = () => {
-  let rowInnerHTML = '';
-  for (let i = 0; i < numRow; i++) {
-    let colInnerHTML = '';
-    for (let j = 0; j < numCol; j++) {
-      colInnerHTML += '<div class="cell"></div>';
-    }
-    rowInnerHTML += `<div class="row">${colInnerHTML}</div>`;
-  }
-
-  board.html(rowInnerHTML);
-};
-
-const mapBoarArr = () => {
-  const rowEls = $('.row').toArray();
-  rowEls.forEach((rowEl, rowIndex) => {
-    const colEls = rowEl.childNodes;
-
-    boardArr[rowIndex] = [];
-    colEls.forEach((cell, colIndex) => {
-      boardArr[rowIndex][colIndex] = cell;
-      cell.location = {};
-      cell.location.rowIndex = rowIndex;
-      cell.location.colIndex = colIndex;
-
-      cell.onclick = () => {
-        if (!start) {
-          start = cell;
-          queue.push(cell);
-          cell.classList.add('start');
-        } else if (!target && cell !== start) {
-          target = cell;
-          cell.classList.add('target');
-        }
-      };
-      
-      
-      cell.onmousedown = () => {
-        isMouseDown = true
-      }
-      
-      cell.onmouseup = () => {
-        isMouseDown = false;
-        if (start && target && cell !== start && cell !== target) {
-          cell.isWall = true;
-          cell.classList.add('wall');
-        }
-      }
-      
-      cell.onmouseenter = () => {
-        if (start && target && cell !== start && cell !== target && isMouseDown) {
-          cell.isWall = true;
-          cell.classList.add('wall');
-        }
-      }
-    });
-  });
-};
-
-const mapNeighBours = () => {
-  for (let rowIndex = 0; rowIndex < numRow; rowIndex++) {
-    for (let colIndex = 0; colIndex < numCol; colIndex++) {
-      const cell = boardArr[rowIndex][colIndex];
-      cell.neigh = {};
-
-      if (rowIndex !== 0) {
-        cell.neigh.north = boardArr[rowIndex - 1][colIndex];
-      }
-
-      if (rowIndex !== numRow - 1) {
-        cell.neigh.south = boardArr[rowIndex + 1][colIndex];
-      }
-
-      if (colIndex !== 0) {
-        cell.neigh.east = boardArr[rowIndex][colIndex - 1];
-      }
-
-      if (colIndex !== numCol - 1) {
-        cell.neigh.west = boardArr[rowIndex][colIndex + 1];
-      }
-    }
-  }
-};
-
 
 const backTrack = (cell) => {
   setTimeout(() => {
@@ -156,14 +61,127 @@ const visitNeighCells = (cell) => {
   // }
 };
 
+const search = () => {
+  if (queue.length > 0 && !hasPath) {
+    visitNeighCells(queue[0]);
+    queue.shift();
+  } else {
+    clearInterval(search);
+  }
+};
+
+const buildBoard = () => {
+  const getLength = (cssAttribute) => {
+    return jBoard.css(cssAttribute).replace('px', '');
+  };
+
+  const jBoard = $('#board');
+  numCol = Math.floor(
+    (getLength('width') -
+      getLength('padding-left') -
+      getLength('padding-right')) /
+      30
+  );
+  numRow = Math.floor(
+    (getLength('height') -
+      getLength('padding-top') -
+      getLength('padding-bottom')) /
+      30
+  );
+
+  let rowInnerHTML = '';
+  for (let i = 0; i < numRow; i++) {
+    let colInnerHTML = '';
+    for (let j = 0; j < numCol; j++) {
+      colInnerHTML += '<div class="cell"></div>';
+    }
+    rowInnerHTML += `<div class="row">${colInnerHTML}</div>`;
+  }
+
+  board.html(rowInnerHTML);
+};
+
+const mapBoarArr = () => {
+  const rowEls = $('.row').toArray();
+  rowEls.forEach((rowEl, rowIndex) => {
+    const colEls = rowEl.childNodes;
+
+    boardArr[rowIndex] = [];
+    colEls.forEach((cell, colIndex) => {
+      boardArr[rowIndex][colIndex] = cell;
+      cell.location = {};
+      cell.location.rowIndex = rowIndex;
+      cell.location.colIndex = colIndex;
+
+      cell.onclick = () => {
+        if (!start) {
+          start = cell;
+          queue.push(cell);
+          cell.classList.add('start');
+        } else if (!target && cell !== start) {
+          target = cell;
+          cell.classList.add('target');
+        }
+      };
+
+      cell.onmousedown = () => {
+        isMouseDown = true;
+      };
+
+      cell.onmouseup = () => {
+        isMouseDown = false;
+        if (start && target && cell !== start && cell !== target) {
+          cell.isWall = true;
+          cell.classList.add('wall');
+        }
+      };
+
+      cell.onmouseenter = () => {
+        if (
+          start &&
+          target &&
+          cell !== start &&
+          cell !== target &&
+          isMouseDown
+        ) {
+          cell.isWall = true;
+          cell.classList.add('wall');
+        }
+      };
+    });
+  });
+};
+
+const mapNeighBours = () => {
+  for (let rowIndex = 0; rowIndex < numRow; rowIndex++) {
+    for (let colIndex = 0; colIndex < numCol; colIndex++) {
+      const cell = boardArr[rowIndex][colIndex];
+      cell.neigh = {};
+
+      if (rowIndex !== 0) {
+        cell.neigh.north = boardArr[rowIndex - 1][colIndex];
+      }
+
+      if (rowIndex !== numRow - 1) {
+        cell.neigh.south = boardArr[rowIndex + 1][colIndex];
+      }
+
+      if (colIndex !== 0) {
+        cell.neigh.east = boardArr[rowIndex][colIndex - 1];
+      }
+
+      if (colIndex !== numCol - 1) {
+        cell.neigh.west = boardArr[rowIndex][colIndex + 1];
+      }
+    }
+  }
+};
+
 document.querySelector('button').addEventListener('click', () => {
   if (start && target) {
     setInterval(search, TIME_DELAY);
   }
 });
-
-
-
 
 buildBoard();
 mapBoarArr();
