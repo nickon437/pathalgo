@@ -64,7 +64,6 @@ const mapBoarArr = () => {
           queue.push(cell);
           cell.classList.add('start');
         } else if (!target) {
-          console.log(cell);
           target = cell;
           cell.classList.add('target');
         }
@@ -77,6 +76,10 @@ const mapBoarArr = () => {
       
       cell.onmouseup = () => {
         isMouseDown = false;
+        if (start && target) {
+          cell.isWall = true;
+          cell.classList.add('wall');
+        }
       }
       
       cell.onmouseenter = () => {
