@@ -26,3 +26,7 @@ html {
 .target {
   background-color: brown;
 }
+
+.visited {
+  background-color: cadetblue;
+}
