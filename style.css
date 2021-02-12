@@ -5,7 +5,7 @@ html {
 #board {
   display: flex;
   flex-direction: column;
-  border: 1px solid #333;
+  border: 1px solid #ccc;
 }
 
 .row {
@@ -13,14 +13,17 @@ html {
 }
 
 .cell {
-  border: 1px solid #333;
+  border: 1px solid #ccc;
   height: 30px;
   width: 30px;
-  /* background-color: white;; */
 }
 
 .start {
   background-color: royalblue;
+}
+
+.start.visited::before {
+  animation: none;
 }
 
 .target {
@@ -28,5 +31,25 @@ html {
 }
 
 .visited {
-  background-color: cadetblue;
+  position: relative;
+  overflow: hidden;
+}
+
+.visited::before {
+  content: "";
+  position: absolute;
+  animation: visit 1.5s ease forwards;
+  border-radius: 50%;
+  background-color: cyan;
+  width: 30px;
+  height: 30px;
+  transform: scale(0);
+}
+
+@keyframes visit {
+  to {
+    border-radius: 20%;
+    background-color: teal;
+    transform: scale(90%);
+  }
 }

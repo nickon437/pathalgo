@@ -16,7 +16,7 @@ const DIR = {
 
 const queue = [];
 
-const TIME_DELAY = 50;
+const TIME_DELAY = 20;
 
 let hasPath = false;
 
