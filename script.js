@@ -4,6 +4,7 @@ const boardArr = [];
 const numRow = 20;
 const numCol = 20;
 
+
 let start;
 let target;
 
@@ -20,6 +21,8 @@ const TIME_DELAY = 20;
 
 let hasPath = false;
 const path = [];
+
+let isMouseDown = false;
 
 const search = () => {
   if (queue.length > 0 && !hasPath) {
@@ -66,6 +69,22 @@ const mapBoarArr = () => {
           cell.classList.add('target');
         }
       };
+      
+      
+      cell.onmousedown = () => {
+        isMouseDown = true
+      }
+      
+      cell.onmouseup = () => {
+        isMouseDown = false;
+      }
+      
+      cell.onmouseenter = () => {
+        if (start && target && isMouseDown) {
+          cell.isWall = true;
+          cell.classList.add('wall');
+        }
+      }
     });
   });
 };
@@ -77,43 +96,36 @@ const mapNeighBours = () => {
       cell.neigh = {};
 
       if (rowIndex !== 0) {
-        boardArr[rowIndex][colIndex].neigh.north =
-          boardArr[rowIndex - 1][colIndex];
+        cell.neigh.north = boardArr[rowIndex - 1][colIndex];
       }
 
       if (rowIndex !== numRow - 1) {
-        boardArr[rowIndex][colIndex].neigh.south =
-          boardArr[rowIndex + 1][colIndex];
+        cell.neigh.south = boardArr[rowIndex + 1][colIndex];
       }
 
       if (colIndex !== 0) {
-        boardArr[rowIndex][colIndex].neigh.east =
-          boardArr[rowIndex][colIndex - 1];
+        cell.neigh.east = boardArr[rowIndex][colIndex - 1];
       }
 
       if (colIndex !== numCol - 1) {
-        boardArr[rowIndex][colIndex].neigh.west =
-          boardArr[rowIndex][colIndex + 1];
+        cell.neigh.west = boardArr[rowIndex][colIndex + 1];
       }
     }
   }
 };
 
-buildBoard();
-mapBoarArr();
-mapNeighBours();
 
 const backTrack = (cell) => {
   setTimeout(() => {
+    cell.classList.add('path');
     if (cell !== start) {
-      cell.classList.add('path');
       backTrack(cell.previous);
     }
   }, 100);
 };
 
 const visitCell = (previous, cell) => {
-  if (cell && !cell.isVisited) {
+  if (cell && !cell.isVisited && !cell.isWall) {
     cell.isVisited = true;
     cell.previous = previous;
 
@@ -142,5 +154,14 @@ const visitNeighCells = (cell) => {
 };
 
 document.querySelector('button').addEventListener('click', () => {
-  setInterval(search, TIME_DELAY);
+  if (start && target) {
+    setInterval(search, TIME_DELAY);
+  }
 });
+
+
+
+
+buildBoard();
+mapBoarArr();
+mapNeighBours();
