@@ -14,12 +14,14 @@ const DIR = {
   EAST: 'ease',
 };
 
-const queue = [];
+let queue = [];
 
 const TIME_DELAY = 20;
 
 let hasPath = false;
-const path = [];
+let path = [];
+
+let visitedCells = [];
 
 let isMouseDown = false;
 let isMovingStart = false;
@@ -27,13 +29,42 @@ let isMovingTarget = false;
 
 let lastMouseEnteredCell;
 
+let searchInterval;
+let backTrackInterval;
+
+let isFirstRun = true;
+
+const clearBoard = () => {
+  queue = [start];
+
+  for (const cell of path) {
+    cell.classList.remove('path');
+  }
+  hasPath = false;
+  path = [];
+
+  for (const cell of visitedCells) {
+    cell.isVisited = false;
+    cell.classList.remove('visited');
+  }
+  visitedCells = [];
+};
+
+const layPath = (cell) => {
+  cell.classList.add('path');
+  path.push(cell);
+  if (cell !== start) {
+    backTrack(cell.previous);
+  }
+}
+
 const backTrack = (cell) => {
-  setTimeout(() => {
-    cell.classList.add('path');
-    if (cell !== start) {
-      backTrack(cell.previous);
-    }
-  }, 100);
+  // console.log('backtrack', cell)
+  if (isFirstRun) {
+    setTimeout(() => layPath(cell), 500);
+  } else {
+    layPath(cell);
+  }
 };
 
 const visitCell = (previous, cell) => {
@@ -42,12 +73,13 @@ const visitCell = (previous, cell) => {
     cell.previous = previous;
 
     cell.classList.add('visited');
+    visitedCells.push(cell);
     queue.push(cell);
     if (cell === target) {
-      // console.log('sameCell');
-      // clearInterval(search);
+      // console.log('clear interval')
+      clearInterval(search);
       hasPath = true;
-      return backTrack(target);
+      // return backTrack(target);
     }
   }
 };
@@ -59,19 +91,33 @@ const visitNeighCells = (cell) => {
   visitCell(cell, south);
   visitCell(cell, west);
 
-  // if (hasPath) {
-  //   console.log('hasPath');
-  //   clearInterval(search);
-  // }
+  if (hasPath) {
+    // console.log('clear interval')
+    // clearInterval(search);
+  }
 };
 
 const search = () => {
+  // console.log('queue.length', queue.length, hasPath)
+
+
   if (queue.length > 0 && !hasPath) {
     visitNeighCells(queue[0]);
+    // console.log('b4 queue.length', queue.length);
     queue.shift();
+    // console.log('af queue.length', queue.length);
   } else {
-    clearInterval(search);
+    // console.log('clear interval')
+    clearInterval(searchInterval);
   }
+
+  if (hasPath) {
+    // clearInterval(searchInterval); // Without this, the interval will run another run and make backTrack with no timeout due to new isFirstRun value
+
+    backTrack(target);
+    isFirstRun = false;
+  }
+
 };
 
 const calculateBoardSize = () => {
@@ -146,6 +192,14 @@ const mapBoarArr = () => {
             start = cell === target ? lastMouseEnteredCell : cell;
             start.classList.add('start');
             start.classList.remove('wall');
+            if (hasPath) {
+              // console.log(queue.length);
+              clearBoard();
+              // $('.visited.cell::before').css('animation') = 'visit 0s ease forwards'
+              while (queue.length > 0 && !hasPath) {
+                search();
+              }
+            }
           } else if (isMovingTarget) {
             target = cell === start ? lastMouseEnteredCell : cell;
             target.classList.add('target');
@@ -166,13 +220,13 @@ const mapBoarArr = () => {
           if (start.isWall) {
             start.classList.add('wall');
           }
-          start = null; 
+          start = null;
         } else if (isMovingTarget) {
           target.classList.remove('target');
           if (target.isWall) {
             target.classList.add('wall');
           }
-          target = null; 
+          target = null;
         }
       };
     });
@@ -215,7 +269,7 @@ const addStartAndTarget = () => {
 document.querySelector('button').addEventListener('click', () => {
   if (start && target) {
     queue.push(start);
-    setInterval(search, TIME_DELAY);
+    searchInterval = setInterval(search, TIME_DELAY);
   }
 });
 
