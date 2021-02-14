@@ -15,18 +15,19 @@ const DIR = {
   EAST: 'ease',
 };
 
-const INSPECTING_CELL_DURATION = 10;
+const INSPECTING_CELL_DURATION = 5;
 const LAYING_PATH_DURATION = 50;
 
 let hasPath = false;
 let queue = [];
 let path = [];
 let visitedCells = [];
-let wallCells = []
+let wallCells = [];
 
 let isMouseDown = false;
 let isMovingStart = false;
 let isMovingTarget = false;
+let isSmashingWall = false;
 let isFirstRun = true;
 
 let searchInterval;
@@ -153,6 +154,13 @@ const buildWall = (cell) => {
   }
 };
 
+const smashWall = (cell) => {
+  cell.isWall = false;
+  cell.classList.remove('wall');
+  wallCells.filter((curCell) => curCell !== cell);
+  rerenderPath();
+};
+
 const mapBoarArr = () => {
   const rowEls = $('.row').toArray();
   rowEls.forEach((rowEl, rowIndex) => {
@@ -163,13 +171,23 @@ const mapBoarArr = () => {
       boardArr[rowIndex][colIndex] = cell;
       cell.location = { rowIndex, colIndex };
 
+      cell.oncontextmenu = (e) => {
+        e.preventDefault();
+      };
+
       cell.onmousedown = () => {
-        buildWall(cell);
         isMouseDown = true;
         if (cell === start) {
           isMovingStart = true;
         } else if (cell === target) {
           isMovingTarget = true;
+        } else {
+          if (cell.isWall) {
+            isSmashingWall = true;
+            smashWall(cell);
+          } else {
+            buildWall(cell);
+          }
         }
       };
 
@@ -177,6 +195,7 @@ const mapBoarArr = () => {
         isMouseDown = false;
         isMovingStart = false;
         isMovingTarget = false;
+        isSmashingWall = false;
       };
 
       cell.onmouseenter = () => {
@@ -191,6 +210,8 @@ const mapBoarArr = () => {
             target.classList.add('target');
             target.classList.remove('wall');
             rerenderPath();
+          } else if (isSmashingWall) {
+            smashWall(cell);
           } else {
             buildWall(cell);
           }
