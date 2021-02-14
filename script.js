@@ -15,12 +15,14 @@ const DIR = {
   EAST: 'ease',
 };
 
-const TIME_DELAY = 10;
+const INSPECTING_CELL_DURATION = 10;
+const LAYING_PATH_DURATION = 50;
 
 let hasPath = false;
 let queue = [];
 let path = [];
 let visitedCells = [];
+let wallCells = []
 
 let isMouseDown = false;
 let isMovingStart = false;
@@ -30,7 +32,7 @@ let isFirstRun = true;
 let searchInterval;
 let backTrackInterval;
 
-const clearBoard = () => {
+const clearSearchResult = () => {
   queue = [start];
 
   for (const cell of path) {
@@ -59,7 +61,7 @@ const layPath = (cell) => {
 
 const backTrack = (cell) => {
   if (isFirstRun) {
-    setTimeout(() => layPath(cell), 50);
+    setTimeout(() => layPath(cell), LAYING_PATH_DURATION);
   } else {
     layPath(cell);
   }
@@ -134,8 +136,8 @@ const buildBoard = () => {
 };
 
 const rerenderPath = () => {
-  if (hasPath) {
-    clearBoard();
+  if (!isFirstRun) {
+    clearSearchResult();
     while (queue.length > 0 && !hasPath) {
       search();
     }
@@ -144,6 +146,7 @@ const rerenderPath = () => {
 
 const buildWall = (cell) => {
   if (cell !== start && cell !== target) {
+    wallCells.push(cell);
     cell.isWall = true;
     cell.classList.add('wall');
     rerenderPath();
@@ -241,11 +244,20 @@ const addStartAndTarget = () => {
   target.classList.add('target');
 };
 
-document.querySelector('button').addEventListener('click', () => {
+document.querySelector('#start-btn').addEventListener('click', () => {
   if (start && target) {
     queue.push(start);
-    searchInterval = setInterval(search, TIME_DELAY);
+    searchInterval = setInterval(search, INSPECTING_CELL_DURATION);
   }
+});
+
+document.querySelector('#clear-btn').addEventListener('click', () => {
+  clearSearchResult();
+  for (const cell of wallCells) {
+    cell.isWall = false;
+    cell.classList.remove('wall');
+  }
+  wallCells = [];
 });
 
 buildBoard();
