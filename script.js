@@ -279,6 +279,10 @@ document.querySelector('#clear-btn').addEventListener('click', () => {
     cell.classList.remove('wall');
   }
   wallCells = [];
+
+  isFirstRun = true;
+  board[0].classList.remove('no-animation');
+  clearInterval(searchInterval);
 });
 
 buildBoard();
