@@ -54,7 +54,6 @@ const layPath = (cell) => {
   path.push(cell);
   if (cell === start) {
     isFirstRun = false;
-    board[0].classList.add('no-animation');
   } else {
     backTrack(cell.previous);
   }
@@ -77,7 +76,6 @@ const visitCell = (previous, cell) => {
     queue.push(cell);
 
     if (cell === target) {
-      clearInterval(search);
       hasPath = true;
       backTrack(target);
     }
@@ -92,12 +90,19 @@ const visitNeighCells = (cell) => {
   visitCell(cell, west);
 };
 
+
 const search = () => {
-  if (queue.length > 0 && !hasPath) {
-    visitNeighCells(queue[0]);
-    queue.shift();
-  } else {
+  visitNeighCells(queue[0]);
+  queue.shift();
+  if (queue.length <= 0 || hasPath) {
     clearInterval(searchInterval);
+    setTimeout(() => {
+      board[0].classList.add('no-animation');
+    }, 2000)
+  }
+
+  if (queue.length <= 0) { // Allow rerendering when there is no path in first run
+    isFirstRun = false;
   }
 };
 
