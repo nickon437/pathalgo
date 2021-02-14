@@ -66,12 +66,13 @@ const backTrack = (cell) => {
 };
 
 const visitCell = (previous, cell) => {
-  if (cell && !cell.isVisited && !cell.isWall) {
+  if (cell && !cell.isVisited && (!cell.isWall || cell === target)) {
     cell.previous = previous;
     cell.isVisited = true;
     cell.classList.add('visited');
     visitedCells.push(cell);
     queue.push(cell);
+
     if (cell === target) {
       clearInterval(search);
       hasPath = true;
@@ -209,6 +210,10 @@ const mapBoarArr = () => {
           target = null;
         }
       };
+
+      cell.ondragstart = () => {
+        return false;
+      };
     });
   });
 };
@@ -217,23 +222,13 @@ const mapNeighBours = () => {
   for (let rowIndex = 0; rowIndex < numRow; rowIndex++) {
     for (let colIndex = 0; colIndex < numCol; colIndex++) {
       const cell = boardArr[rowIndex][colIndex];
-      cell.neigh = {};
-
-      if (rowIndex !== 0) {
-        cell.neigh.north = boardArr[rowIndex - 1][colIndex];
-      }
-
-      if (rowIndex !== numRow - 1) {
-        cell.neigh.south = boardArr[rowIndex + 1][colIndex];
-      }
-
-      if (colIndex !== 0) {
-        cell.neigh.east = boardArr[rowIndex][colIndex - 1];
-      }
-
-      if (colIndex !== numCol - 1) {
-        cell.neigh.west = boardArr[rowIndex][colIndex + 1];
-      }
+      cell.neigh = {
+        north: rowIndex !== 0 ? boardArr[rowIndex - 1][colIndex] : null,
+        south:
+          rowIndex !== numRow - 1 ? boardArr[rowIndex + 1][colIndex] : null,
+        east: colIndex !== 0 ? boardArr[rowIndex][colIndex - 1] : null,
+        west: colIndex !== numCol - 1 ? boardArr[rowIndex][colIndex + 1] : null,
+      };
     }
   }
 };
