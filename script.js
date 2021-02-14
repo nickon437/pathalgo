@@ -6,6 +6,7 @@ let numCol = 20;
 
 let start;
 let target;
+let lastMouseEnteredCell;
 
 const DIR = {
   NORTH: 'north',
@@ -14,25 +15,20 @@ const DIR = {
   EAST: 'ease',
 };
 
-let queue = [];
-
-const TIME_DELAY = 20;
+const TIME_DELAY = 10;
 
 let hasPath = false;
+let queue = [];
 let path = [];
-
 let visitedCells = [];
 
 let isMouseDown = false;
 let isMovingStart = false;
 let isMovingTarget = false;
-
-let lastMouseEnteredCell;
+let isFirstRun = true;
 
 let searchInterval;
 let backTrackInterval;
-
-let isFirstRun = true;
 
 const clearBoard = () => {
   queue = [start];
@@ -53,15 +49,17 @@ const clearBoard = () => {
 const layPath = (cell) => {
   cell.classList.add('path');
   path.push(cell);
-  if (cell !== start) {
+  if (cell === start) {
+    isFirstRun = false;
+    board[0].classList.add('no-animation');
+  } else {
     backTrack(cell.previous);
   }
-}
+};
 
 const backTrack = (cell) => {
-  // console.log('backtrack', cell)
   if (isFirstRun) {
-    setTimeout(() => layPath(cell), 500);
+    setTimeout(() => layPath(cell), 50);
   } else {
     layPath(cell);
   }
@@ -71,15 +69,13 @@ const visitCell = (previous, cell) => {
   if (cell && !cell.isVisited && !cell.isWall) {
     cell.isVisited = true;
     cell.previous = previous;
-
     cell.classList.add('visited');
     visitedCells.push(cell);
     queue.push(cell);
     if (cell === target) {
-      // console.log('clear interval')
       clearInterval(search);
       hasPath = true;
-      // return backTrack(target);
+      backTrack(target);
     }
   }
 };
@@ -90,34 +86,15 @@ const visitNeighCells = (cell) => {
   visitCell(cell, east);
   visitCell(cell, south);
   visitCell(cell, west);
-
-  if (hasPath) {
-    // console.log('clear interval')
-    // clearInterval(search);
-  }
 };
 
 const search = () => {
-  // console.log('queue.length', queue.length, hasPath)
-
-
   if (queue.length > 0 && !hasPath) {
     visitNeighCells(queue[0]);
-    // console.log('b4 queue.length', queue.length);
     queue.shift();
-    // console.log('af queue.length', queue.length);
   } else {
-    // console.log('clear interval')
     clearInterval(searchInterval);
   }
-
-  if (hasPath) {
-    // clearInterval(searchInterval); // Without this, the interval will run another run and make backTrack with no timeout due to new isFirstRun value
-
-    backTrack(target);
-    isFirstRun = false;
-  }
-
 };
 
 const calculateBoardSize = () => {
