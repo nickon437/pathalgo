@@ -132,6 +132,24 @@ const buildBoard = () => {
   board.html(rowInnerHTML);
 };
 
+const rerenderPath = () => {
+  if (hasPath) {
+    clearBoard();
+    while (queue.length > 0 && !hasPath) {
+      search();
+    }
+  }
+};
+
+const buildWall = (cell) => {
+  if (cell !== start && cell !== target) {
+    cell.isWall = true;
+    cell.classList.add('wall');
+    cell.classList.remove('visited');
+    rerenderPath();
+  }
+}
+
 const mapBoarArr = () => {
   const rowEls = $('.row').toArray();
   rowEls.forEach((rowEl, rowIndex) => {
@@ -145,6 +163,7 @@ const mapBoarArr = () => {
       cell.location.colIndex = colIndex;
 
       cell.onmousedown = () => {
+        buildWall(cell);
         isMouseDown = true;
         if (cell === start) {
           isMovingStart = true;
@@ -154,10 +173,6 @@ const mapBoarArr = () => {
       };
 
       cell.onmouseup = () => {
-        if (cell !== start && cell !== target && !isMovingStart) {
-          cell.isWall = true;
-          cell.classList.add('wall');
-        }
         isMouseDown = false;
         isMovingStart = false;
         isMovingTarget = false;
@@ -169,23 +184,13 @@ const mapBoarArr = () => {
             start = cell === target ? lastMouseEnteredCell : cell;
             start.classList.add('start');
             start.classList.remove('wall');
-            if (hasPath) {
-              // console.log(queue.length);
-              clearBoard();
-              // $('.visited.cell::before').css('animation') = 'visit 0s ease forwards'
-              while (queue.length > 0 && !hasPath) {
-                search();
-              }
-            }
+            rerenderPath()
           } else if (isMovingTarget) {
             target = cell === start ? lastMouseEnteredCell : cell;
             target.classList.add('target');
             target.classList.remove('wall');
           } else {
-            if (cell !== start && cell !== target) {
-              cell.isWall = true;
-              cell.classList.add('wall');
-            }
+            buildWall(cell);
           }
         }
       };

@@ -47,11 +47,6 @@ body {
   border-color: white;
 }
 
-.visited.path {
-background-color: tomato;
-  transition: background-color 0.3s ease;
-}
-
 .cell::before {
   content: "";
   position: absolute;
@@ -78,7 +73,17 @@ background-color: tomato;
 
 .path.visited.cell::before {
   animation: none;
-  /* transition: background-color 0.3s ease; */
+  background-color: tomato;
+  transform: scale(100%);
+  border-radius: 0;
+  transition-property: background-color border-radius;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.no-animation .path.visited.cell::before {
+  animation: none;
+  transition: none;
 }
 
 .wall.cell::before {
