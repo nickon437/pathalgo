@@ -67,8 +67,8 @@ const backTrack = (cell) => {
 
 const visitCell = (previous, cell) => {
   if (cell && !cell.isVisited && !cell.isWall) {
-    cell.isVisited = true;
     cell.previous = previous;
+    cell.isVisited = true;
     cell.classList.add('visited');
     visitedCells.push(cell);
     queue.push(cell);
@@ -145,10 +145,9 @@ const buildWall = (cell) => {
   if (cell !== start && cell !== target) {
     cell.isWall = true;
     cell.classList.add('wall');
-    cell.classList.remove('visited');
     rerenderPath();
   }
-}
+};
 
 const mapBoarArr = () => {
   const rowEls = $('.row').toArray();
@@ -158,9 +157,7 @@ const mapBoarArr = () => {
     boardArr[rowIndex] = [];
     colEls.forEach((cell, colIndex) => {
       boardArr[rowIndex][colIndex] = cell;
-      cell.location = {};
-      cell.location.rowIndex = rowIndex;
-      cell.location.colIndex = colIndex;
+      cell.location = { rowIndex, colIndex };
 
       cell.onmousedown = () => {
         buildWall(cell);
@@ -184,11 +181,12 @@ const mapBoarArr = () => {
             start = cell === target ? lastMouseEnteredCell : cell;
             start.classList.add('start');
             start.classList.remove('wall');
-            rerenderPath()
+            rerenderPath();
           } else if (isMovingTarget) {
             target = cell === start ? lastMouseEnteredCell : cell;
             target.classList.add('target');
             target.classList.remove('wall');
+            rerenderPath();
           } else {
             buildWall(cell);
           }
