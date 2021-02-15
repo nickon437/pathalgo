@@ -33,6 +33,12 @@ let isFirstRun = true;
 let searchInterval;
 let backTrackInterval;
 
+const markCellVisited = (cell) => {
+  visitedCells.push(cell);
+  cell.classList.add('visited');
+  cell.isVisited = true;
+}
+
 const clearSearchResult = () => {
   queue = [start];
 
@@ -70,9 +76,7 @@ const backTrack = (cell) => {
 const visitCell = (previous, cell) => {
   if (cell && !cell.isVisited && (!cell.isWall || cell === target)) {
     cell.previous = previous;
-    cell.isVisited = true;
-    cell.classList.add('visited');
-    visitedCells.push(cell);
+    markCellVisited(cell);
     queue.push(cell);
 
     if (cell === target) {
@@ -144,6 +148,7 @@ const buildBoard = () => {
 const rerenderPath = () => {
   if (!isFirstRun) {
     clearSearchResult();
+    markCellVisited(start);
     while (queue.length > 0 && !hasPath) {
       search();
     }
@@ -273,6 +278,7 @@ const addStartAndTarget = () => {
 document.querySelector('#start-btn').addEventListener('click', () => {
   if (start && target) {
     queue.push(start);
+    markCellVisited(start);
     searchInterval = setInterval(search, INSPECTING_CELL_DURATION);
   }
 });
