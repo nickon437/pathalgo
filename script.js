@@ -32,15 +32,18 @@ let isFirstRun = true;
 
 let searchInterval;
 let backTrackInterval;
+let removeAnimationTimeout;
 
 const markCellVisited = (cell) => {
   visitedCells.push(cell);
   cell.classList.add('visited');
   cell.isVisited = true;
+  
+  queue.push(cell);
 }
 
 const clearSearchResult = () => {
-  queue = [start];
+  queue = [];
 
   for (const cell of path) {
     cell.classList.remove('path');
@@ -77,7 +80,6 @@ const visitCell = (previous, cell) => {
   if (cell && !cell.isVisited && (!cell.isWall || cell === target)) {
     cell.previous = previous;
     markCellVisited(cell);
-    queue.push(cell);
 
     if (cell === target) {
       hasPath = true;
@@ -100,7 +102,7 @@ const search = () => {
   queue.shift();
   if (queue.length <= 0 || hasPath) {
     clearInterval(searchInterval);
-    setTimeout(() => {
+    removeAnimationTimeout = setTimeout(() => {
       board[0].classList.add('no-animation');
     }, 2000)
   }
@@ -277,7 +279,6 @@ const addStartAndTarget = () => {
 
 document.querySelector('#start-btn').addEventListener('click', () => {
   if (start && target) {
-    queue.push(start);
     markCellVisited(start);
     searchInterval = setInterval(search, INSPECTING_CELL_DURATION);
   }
@@ -293,6 +294,7 @@ document.querySelector('#clear-btn').addEventListener('click', () => {
 
   isFirstRun = true;
   board[0].classList.remove('no-animation');
+  clearTimeout(removeAnimationTimeout);
   clearInterval(searchInterval);
 });
 
