@@ -38,24 +38,24 @@ const markCellVisited = (cell) => {
   visitedCells.push(cell);
   cell.classList.add('visited');
   cell.isVisited = true;
-  
+
   queue.push(cell);
-}
+};
 
 const clearSearchResult = () => {
   queue = [];
 
-  for (const cell of path) {
+  hasPath = false;
+  while (path.length > 0) {
+    const cell = path.shift();
     cell.classList.remove('path');
   }
-  hasPath = false;
-  path = [];
 
-  for (const cell of visitedCells) {
+  while (visitedCells.length > 0) {
+    const cell = visitedCells.shift();
     cell.isVisited = false;
     cell.classList.remove('visited');
   }
-  visitedCells = [];
 };
 
 const layPath = (cell) => {
@@ -96,18 +96,18 @@ const visitNeighCells = (cell) => {
   visitCell(cell, west);
 };
 
-
 const search = () => {
-  visitNeighCells(queue[0]);
-  queue.shift();
+  visitNeighCells(queue.shift());
+
   if (queue.length <= 0 || hasPath) {
     clearInterval(searchInterval);
     removeAnimationTimeout = setTimeout(() => {
       board[0].classList.add('no-animation');
-    }, 2000)
+    }, 2000);
   }
 
-  if (queue.length <= 0) { // Allow rerendering when there is no path in first run
+  // Allow rerendering when there is no path in first run
+  if (queue.length <= 0) {
     isFirstRun = false;
   }
 };
@@ -286,11 +286,12 @@ document.querySelector('#start-btn').addEventListener('click', () => {
 
 document.querySelector('#clear-btn').addEventListener('click', () => {
   clearSearchResult();
-  for (const cell of wallCells) {
+
+  while (wallCells.length > 0) {
+    const cell = wallCells.shift();
     cell.isWall = false;
     cell.classList.remove('wall');
   }
-  wallCells = [];
 
   isFirstRun = true;
   board[0].classList.remove('no-animation');
