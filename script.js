@@ -30,9 +30,10 @@ let isMovingTarget = false;
 let isSmashingWall = false;
 let isFirstRun = true;
 
-let searchInterval;
-let backTrackInterval;
 let removeAnimationTimeout;
+
+const delay = async (duration) =>
+  await new Promise((resolve) => setTimeout(resolve, duration));
 
 const markCellVisited = (cell) => {
   visitedCells.push(cell);
@@ -58,21 +59,17 @@ const clearSearchResult = () => {
   }
 };
 
-const layPath = (cell) => {
+const layPath = async (cell) => {
+  if (isFirstRun) {
+    await delay(LAYING_PATH_DURATION);
+  }
+
   cell.classList.add('path');
   path.push(cell);
   if (cell === start) {
     isFirstRun = false;
   } else {
-    backTrack(cell.previous);
-  }
-};
-
-const backTrack = (cell) => {
-  if (isFirstRun) {
-    setTimeout(() => layPath(cell), LAYING_PATH_DURATION);
-  } else {
-    layPath(cell);
+    layPath(cell.previous);
   }
 };
 
@@ -83,7 +80,7 @@ const visitCell = (previous, cell) => {
 
     if (cell === target) {
       hasPath = true;
-      backTrack(target);
+      layPath(target);
     }
   }
 };
@@ -96,19 +93,28 @@ const visitNeighCells = (cell) => {
   visitCell(cell, west);
 };
 
-const search = () => {
-  visitNeighCells(queue.shift());
-
-  if (queue.length <= 0 || hasPath) {
-    clearInterval(searchInterval);
-    removeAnimationTimeout = setTimeout(() => {
-      board[0].classList.add('no-animation');
-    }, 2000);
+const search = async () => {
+  if (isFirstRun) {
+    await delay(INSPECTING_CELL_DURATION);
   }
+
+  const cell = queue.shift();
+  if (!cell) {
+    return null;
+  }
+  visitNeighCells(cell);
 
   // Allow rerendering when there is no path in first run
   if (queue.length <= 0) {
     isFirstRun = false;
+  }
+
+  if (queue.length <= 0 || hasPath) {
+    removeAnimationTimeout = setTimeout(() => {
+      board.addClass('no-animation');
+    }, 2000);
+  } else {
+    search();
   }
 };
 
@@ -151,9 +157,7 @@ const rerenderPath = () => {
   if (!isFirstRun) {
     clearSearchResult();
     markCellVisited(start);
-    while (queue.length > 0 && !hasPath) {
-      search();
-    }
+    search();
   }
 };
 
@@ -280,7 +284,7 @@ const addStartAndTarget = () => {
 document.querySelector('#start-btn').addEventListener('click', () => {
   if (start && target) {
     markCellVisited(start);
-    searchInterval = setInterval(search, INSPECTING_CELL_DURATION);
+    search();
   }
 });
 
@@ -294,9 +298,8 @@ document.querySelector('#clear-btn').addEventListener('click', () => {
   }
 
   isFirstRun = true;
-  board[0].classList.remove('no-animation');
-  clearTimeout(removeAnimationTimeout);
-  clearInterval(searchInterval);
+  board.removeClass('no-animation');
+  clearTimeout(removeAnimationTimeout); // For edge case, when board is cleared during board is waiting for no-animation to be added
 });
 
 buildBoard();
