@@ -1,5 +1,6 @@
 import bfs from './bfs.js';
 import dfs from './dfs.js';
+import buildBasicRandMaze from './basic-rand-maze.js';
 
 const app = {
   board: $('#board'),
@@ -248,6 +249,11 @@ document.querySelector('#clear-btn').addEventListener('click', () => {
 document.querySelector('#dfs-btn').addEventListener('click', () => {
   markCellVisited(app.start); // TODO: May be move this to dfs;
   dfs();
+});
+
+document.querySelector('#basic-rand-maze-btn').addEventListener('click', () => {
+  buildBasicRandMaze();
+  rerenderPath();
 });
 
 buildBoard();
