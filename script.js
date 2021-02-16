@@ -93,7 +93,6 @@ const buildBoard = () => {
 const rerenderPath = () => {
   if (!app.isFirstRun) {
     clearSearchResult();
-    markCellVisited(app.start);
     bfs();
   }
 };
@@ -227,7 +226,6 @@ const addStartAndTarget = () => {
 
 document.querySelector('#start-btn').addEventListener('click', () => {
   if (app.start && app.target) {
-    markCellVisited(app.start);
     bfs();
   }
 });
@@ -248,7 +246,7 @@ document.querySelector('#clear-btn').addEventListener('click', () => {
 
 
 document.querySelector('#dfs-btn').addEventListener('click', () => {
-  markCellVisited(app.start);
+  markCellVisited(app.start); // TODO: May be move this to dfs;
   dfs();
 });
 

@@ -20,6 +20,7 @@ const visitCell = async (previous, cell) => {
     if (app.isFirstRun) {
       await delay(app.INSPECTING_CELL_DURATION);
     }
+    
     cell.previous = previous;
     markCellVisited(cell);
 
