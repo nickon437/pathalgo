@@ -16,7 +16,7 @@ body {
   padding: 20px;
 }
 
-button {
+button, select {
   min-height: 2rem;
   min-width: 7rem;
   padding: 10px;

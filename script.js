@@ -30,6 +30,8 @@ const app = {
   removeAnimationTimeout: null,
 };
 
+const pfAlgorithm = $('#path-finding-algorithm');
+
 const delay = async (duration) =>
   await new Promise((resolve) => setTimeout(resolve, duration));
 
@@ -91,10 +93,23 @@ const buildBoard = () => {
   app.board.html(rowInnerHTML);
 };
 
+const startPathFinding = () => {
+  switch (pfAlgorithm.val()) {
+    case 'bfs':
+      bfs();
+      break;
+    case 'dfs':
+      dfs();
+      break;
+    default:
+      break;
+  }
+};
+
 const rerenderPath = () => {
   if (!app.isFirstRun) {
     clearSearchResult();
-    bfs();
+    startPathFinding();
   }
 };
 
@@ -205,11 +220,11 @@ const mapNeighBours = () => {
           rowIndex !== app.numRow - 1
             ? app.boardArr[rowIndex + 1][colIndex]
             : null,
-        east: colIndex !== app.numCol - 1 ? app.boardArr[rowIndex][colIndex + 1] : null,
-        west:
-          colIndex !== 0
-            ? app.boardArr[rowIndex][colIndex - 1]
+        east:
+          colIndex !== app.numCol - 1
+            ? app.boardArr[rowIndex][colIndex + 1]
             : null,
+        west: colIndex !== 0 ? app.boardArr[rowIndex][colIndex - 1] : null,
       };
     }
   }
@@ -227,7 +242,7 @@ const addStartAndTarget = () => {
 
 document.querySelector('#start-btn').addEventListener('click', () => {
   if (app.start && app.target) {
-    bfs();
+    startPathFinding();
   }
 });
 
@@ -243,12 +258,6 @@ document.querySelector('#clear-btn').addEventListener('click', () => {
   app.isFirstRun = true;
   app.board.removeClass('no-animation');
   clearTimeout(app.removeAnimationTimeout); // For edge case, when board is cleared during board is waiting for no-animation to be added
-});
-
-
-document.querySelector('#dfs-btn').addEventListener('click', () => {
-  markCellVisited(app.start); // TODO: May be move this to dfs;
-  dfs();
 });
 
 document.querySelector('#basic-rand-maze-btn').addEventListener('click', () => {
