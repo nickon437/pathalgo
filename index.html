@@ -4,8 +4,9 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="script.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="script.js" type="module" defer></script>
+    <script src="bfs.js" type="module" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css">
     <title>Pathalgo</title>
@@ -13,6 +14,7 @@
   <body>
     <div id="control-panel">
       <button type="button" id="start-btn"><i class="fas fa-play"></i> Start</button>
+      <button type="button" id="dfs-btn">DFS</button>
       <button type="button" id="clear-btn">Clear</button>
     </div>
     <div id="board" draggable="false"></div>
