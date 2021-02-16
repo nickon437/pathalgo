@@ -1,4 +1,5 @@
 import bfs from './bfs.js';
+import dfs from './dfs.js';
 
 const app = {
   board: $('#board'),
@@ -248,6 +249,7 @@ document.querySelector('#clear-btn').addEventListener('click', () => {
 
 document.querySelector('#dfs-btn').addEventListener('click', () => {
   markCellVisited(app.start);
+  dfs();
 });
 
 buildBoard();
