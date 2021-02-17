@@ -1,6 +1,7 @@
 import bfs from './bfs.js';
 import dfs from './dfs.js';
 import buildBasicRandMaze from './basic-rand-maze.js';
+import buildRecursiveMaze from './recursive-division.js';
 
 const app = {
   board: $('#board'),
@@ -269,5 +270,6 @@ buildBoard();
 mapBoarArr();
 mapNeighBours();
 addStartAndTarget();
+buildRecursiveMaze();
 
 export { app, delay, markCellVisited };
