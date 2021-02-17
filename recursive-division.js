@@ -21,28 +21,29 @@ const buildRecursiveMaze = async () => {
     }
   }
 
-  buildVerticalWall(1, app.numCol - 2, 1, app.numRow - 2);
+  buildWall(1, app.numCol - 2, 1, app.numRow - 2, true);
 };
 
-const buildVerticalWall = async (
-  leftIndex,
-  rightIndex,
-  topIndex,
-  bottomIndex
+const buildWall = async (
+  lowerBoundIndex,
+  upperBoundIndex,
+  headIndex,
+  tailIndex,
+  isVerticalWall,
 ) => {
-  if (rightIndex - leftIndex - 2 < 1) {
+  if (upperBoundIndex - lowerBoundIndex - 2 < 1) {
     return false;
   }
   // if (bottomIndex - topIndex - 2 < 1) {
   //   return false;
   // }
 
-  let wallIndex = randInRange(leftIndex + 1, rightIndex - 1);
-  const doorIndex = randInRange(topIndex, bottomIndex);
+  let wallIndex = randInRange(lowerBoundIndex + 1, upperBoundIndex - 1);
+  const doorIndex = randInRange(headIndex, tailIndex);
 
-  num++;
-  console.log('left right top bottom', leftIndex, rightIndex, topIndex, bottomIndex, 'wallIndex', wallIndex, 'doorIndex', doorIndex);
-  for (let i = topIndex; i <= bottomIndex; i++) {
+  // num++;
+  // console.log('left right top bottom', lowerBoundIndex, upperBoundIndex, headIndex, tailIndex, 'wallIndex', wallIndex, 'doorIndex', doorIndex);
+  for (let i = headIndex; i <= tailIndex; i++) {
     if (
       i === doorIndex ||
       (i === app.start.location.rowIndex &&
@@ -54,58 +55,13 @@ const buildVerticalWall = async (
     }
 
     await delay(100);
-    const cell = app.boardArr[i][wallIndex];
+    const cell = isVerticalWall ? app.boardArr[i][wallIndex] : app.boardArr[wallIndex][i];
     cell.isWall = true;
     cell.classList.add('wall');
-
   }
 
-  await buildHorizontallWall(topIndex, bottomIndex, leftIndex, wallIndex - 1);
-  await buildHorizontallWall(topIndex, bottomIndex, wallIndex + 1, rightIndex);
-
-  return true;
-};
-
-
-const buildHorizontallWall = async (
-  topIndex,
-  bottomIndex,
-  leftIndex,
-  rightIndex,
-) => {
-  if (num >= 100) return;
-  if (bottomIndex - topIndex - 2 < 1) {
-    return false;
-  }
-
-  // if (rightIndex - leftIndex - 2 < 1) {
-  //   return false;
-  // }
-  let wallIndex = randInRange(topIndex + 1, bottomIndex - 1);
-  const doorIndex = randInRange(leftIndex, rightIndex);
-  
-  num++;
-  console.log('top bottom left right', topIndex, bottomIndex, leftIndex, rightIndex, 'wallIndex', wallIndex, 'doorIndex', doorIndex);
-  for (let i = leftIndex; i <= rightIndex; i++) {
-    if (
-      i === doorIndex ||
-      (i === app.start.location.rowIndex &&
-        wallIndex === app.start.location.colIndex) ||
-      (i === app.target.location.rowIndex &&
-        wallIndex === app.target.location.colIndex)
-    ) {
-      continue;
-    }
-
-    await delay(100);
-    const cell = app.boardArr[wallIndex][i];
-    cell.isWall = true;
-    cell.classList.add('wall');
-
-  }
-
-  await buildVerticalWall(leftIndex, rightIndex, topIndex, wallIndex - 1);
-  await buildVerticalWall(leftIndex, rightIndex, wallIndex + 1, bottomIndex);
+  await buildWall(headIndex, tailIndex, lowerBoundIndex, wallIndex - 1, !isVerticalWall);
+  await buildWall(headIndex, tailIndex, wallIndex + 1, upperBoundIndex, !isVerticalWall);
 
   return true;
 };
