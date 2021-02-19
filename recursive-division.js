@@ -52,8 +52,13 @@ const generateWallIndex = (
   isVerticalWall
 ) => {
   let hasPotentialWall = false;
-  for (let i = lowerBoundIndex; i < upperBoundIndex; i++) {
-    hasPotentialWall = isConnectedWithAWall(i, headIndex, tailIndex, isVerticalWall);
+  for (let i = lowerBoundIndex + 1; i < upperBoundIndex; i += 2) {
+    hasPotentialWall = isConnectedWithAWall(
+      i,
+      headIndex,
+      tailIndex,
+      isVerticalWall
+    );
     if (hasPotentialWall) {
       break;
     }
@@ -63,11 +68,13 @@ const generateWallIndex = (
     return -1;
   }
 
-  let wallIndex = randInRange(lowerBoundIndex, upperBoundIndex);
+  let wallIndex =
+    rand((upperBoundIndex - lowerBoundIndex) / 2) * 2 + lowerBoundIndex - 1;
   while (
     !isConnectedWithAWall(wallIndex, headIndex, tailIndex, isVerticalWall)
   ) {
-    wallIndex = randInRange(lowerBoundIndex, upperBoundIndex);
+    wallIndex =
+      rand((upperBoundIndex - lowerBoundIndex) / 2) * 2 + lowerBoundIndex - 1;
   }
 
   return wallIndex;
@@ -127,8 +134,8 @@ const buildWall = async (
   }
 
   let wallIndex = generateWallIndex(
-    lowerBoundIndex + 1,
-    upperBoundIndex - 1,
+    lowerBoundIndex,
+    upperBoundIndex,
     headIndex,
     tailIndex,
     isVerticalWall
