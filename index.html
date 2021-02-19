@@ -7,18 +7,30 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="script.js" type="module" defer></script>
     <script src="bfs.js" type="module" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
-    <link rel="stylesheet" href="style.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+      integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
     <title>Pathalgo</title>
   </head>
   <body>
     <div id="control-panel">
-      <select name="Algorithm" id="path-finding-algorithm">
+      <select name="Path-finding Algorithm" id="path-finding-algorithm">
+        <option value="">Select path-finding algorithm</option>
         <option value="bfs">Breadth-first search</option>
-        <option value="dfs">Depth-first search </option>
+        <option value="dfs">Depth-first search</option>
       </select>
-      <button type="button" id="start-btn"><i class="fas fa-play"></i> Start</button>
-      <button type="button" id="basic-rand-maze-btn">Basic random maze</button>
+      <select name="Maze Generation Algorithm" id="maze-generation-algorithm">
+        <option value="">Select maze generation algorithm</option>
+        <option value="random">Random</option>
+        <option value="recursive-division">Recursive division</option>
+      </select>
+      <button type="button" id="start-btn">
+        <i class="fas fa-play"></i> Start
+      </button>
       <button type="button" id="clear-btn">Clear</button>
     </div>
     <div id="board" draggable="false"></div>

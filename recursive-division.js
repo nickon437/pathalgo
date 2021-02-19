@@ -1,13 +1,7 @@
-import { app, delay } from './script.js';
+import { app, delay, markCellAsWall } from './helper.js';
 
 const rand = (max) => Math.floor(Math.random() * max + 1);
 const randInRange = (min, max) => rand(max - min) + min - 1;
-
-const setCellAsWall = (cell) => {
-  cell.isWall = true;
-  cell.classList.add('wall');
-  app.wallCells.push(cell);
-};
 
 const buildSurroundingWalls = async () => {
   for (let rowIndex = 0; rowIndex < app.numRow; rowIndex++) {
@@ -20,7 +14,7 @@ const buildSurroundingWalls = async () => {
       ) {
         await delay(app.INSPECTING_CELL_DURATION);
         const cell = app.boardArr[rowIndex][colIndex];
-        setCellAsWall(cell);
+        markCellAsWall(cell);
       }
     }
   }
@@ -54,6 +48,7 @@ const generateWallIndex = (room) => {
     tailIndex,
     isVerticalWall,
   } = room;
+
   let hasPotentialWall = false;
   for (let i = lowerBoundIndex + 1; i < upperBoundIndex; i += 2) {
     hasPotentialWall = hasFoundation(i, headIndex, tailIndex, isVerticalWall);
@@ -135,13 +130,7 @@ const buildWall = async (room) => {
   }
 
   for (let i = headIndex; i <= tailIndex; i++) {
-    if (
-      i === doorIndex ||
-      (i === app.start.location.rowIndex &&
-        wallIndex === app.start.location.colIndex) || // Current cell is start cell
-      (i === app.target.location.rowIndex &&
-        wallIndex === app.target.location.colIndex) // Current cell is target cell
-    ) {
+    if (i === doorIndex) {
       continue;
     }
 
@@ -157,7 +146,7 @@ const buildWall = async (room) => {
       cell = getCell(wallIndex, doorIndex, isVerticalWall);
     }
 
-    setCellAsWall(cell);
+    markCellAsWall(cell);
   }
 
   await orientWall({ ...room, upperBoundIndex: wallIndex - 1 });

@@ -1,4 +1,4 @@
-import { app, delay, markCellVisited } from './script.js';
+import { app, delay, markCellVisited } from './helper.js';
 
 const layPath = async (cell) => {
   if (app.isFirstRun) {
