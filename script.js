@@ -3,6 +3,8 @@ import dfs from './dfs.js';
 import buildBasicRandMaze from './basic-rand-maze.js';
 import buildRecursiveMaze from './recursive-division.js';
 
+const CELL_SIZE = 25;
+
 const app = {
   board: $('#board'),
   boardArr: [],
@@ -69,13 +71,13 @@ const calculateBoardSize = () => {
     (getLength('width') -
       getLength('padding-left') -
       getLength('padding-right')) /
-      30
+      CELL_SIZE
   );
   app.numRow = Math.floor(
     (getLength('height') -
       getLength('padding-top') -
       getLength('padding-bottom')) /
-      30
+      CELL_SIZE
   );
 };
 
