@@ -26,39 +26,37 @@ const buildSurroundingWalls = async () => {
   }
 };
 
-// TODO: Set minimum row and col.. maybe 7 ???
 const buildRecursiveMaze = async () => {
   await buildSurroundingWalls();
-  await buildWall(1, app.numCol - 2, 1, app.numRow - 2, true);
+
+  const room = {
+    lowerBoundIndex: 1,
+    upperBoundIndex: app.numCol - 2,
+    headIndex: 1,
+    tailIndex: app.numRow - 2,
+    isVerticalWall: true,
+  };
+  await buildWall(room);
 };
 
-const isConnectedWithAWall = (
-  wallIndex,
-  headIndex,
-  tailIndex,
-  isVerticalWall
-) => {
+const hasFoundation = (wallIndex, headIndex, tailIndex, isVerticalWall) => {
   return (
     getCell(wallIndex, headIndex - 1, isVerticalWall).isWall ||
     getCell(wallIndex, tailIndex + 1, isVerticalWall).isWall
   );
 };
 
-const generateWallIndex = (
-  lowerBoundIndex,
-  upperBoundIndex,
-  headIndex,
-  tailIndex,
-  isVerticalWall
-) => {
+const generateWallIndex = (room) => {
+  const {
+    lowerBoundIndex,
+    upperBoundIndex,
+    headIndex,
+    tailIndex,
+    isVerticalWall,
+  } = room;
   let hasPotentialWall = false;
   for (let i = lowerBoundIndex + 1; i < upperBoundIndex; i += 2) {
-    hasPotentialWall = isConnectedWithAWall(
-      i,
-      headIndex,
-      tailIndex,
-      isVerticalWall
-    );
+    hasPotentialWall = hasFoundation(i, headIndex, tailIndex, isVerticalWall);
     if (hasPotentialWall) {
       break;
     }
@@ -70,9 +68,7 @@ const generateWallIndex = (
 
   let wallIndex =
     rand((upperBoundIndex - lowerBoundIndex) / 2) * 2 + lowerBoundIndex - 1;
-  while (
-    !isConnectedWithAWall(wallIndex, headIndex, tailIndex, isVerticalWall)
-  ) {
+  while (!hasFoundation(wallIndex, headIndex, tailIndex, isVerticalWall)) {
     wallIndex =
       rand((upperBoundIndex - lowerBoundIndex) / 2) * 2 + lowerBoundIndex - 1;
   }
@@ -80,13 +76,15 @@ const generateWallIndex = (
   return wallIndex;
 };
 
-const orientWall = async (
-  lowerBoundIndex,
-  upperBoundIndex,
-  headIndex,
-  tailIndex,
-  isParentVerticalWall
-) => {
+const orientWall = async (room) => {
+  const {
+    lowerBoundIndex,
+    upperBoundIndex,
+    headIndex,
+    tailIndex,
+    isVerticalWall,
+  } = room;
+
   const boundLength = upperBoundIndex - lowerBoundIndex;
   const wallLength = tailIndex - headIndex;
 
@@ -98,21 +96,15 @@ const orientWall = async (
   }
 
   if (sameOrientationAsParent) {
-    await buildWall(
-      lowerBoundIndex,
-      upperBoundIndex,
-      headIndex,
-      tailIndex,
-      isParentVerticalWall
-    );
+    await buildWall(room);
   } else {
-    await buildWall(
-      headIndex,
-      tailIndex,
-      lowerBoundIndex,
-      upperBoundIndex,
-      !isParentVerticalWall
-    );
+    await buildWall({
+      lowerBoundIndex: headIndex,
+      upperBoundIndex: tailIndex,
+      headIndex: lowerBoundIndex,
+      tailIndex: upperBoundIndex,
+      isVerticalWall: !isVerticalWall,
+    });
   }
 };
 
@@ -122,24 +114,20 @@ const getCell = (wallIndex, boundIndex, isVerticalWall) => {
     : app.boardArr[wallIndex][boundIndex];
 };
 
-const buildWall = async (
-  lowerBoundIndex,
-  upperBoundIndex,
-  headIndex,
-  tailIndex,
-  isVerticalWall
-) => {
-  if (upperBoundIndex - lowerBoundIndex - 2 < 0 || tailIndex - headIndex < 1) {
-    return false;
-  }
-
-  let wallIndex = generateWallIndex(
+const buildWall = async (room) => {
+  const {
     lowerBoundIndex,
     upperBoundIndex,
     headIndex,
     tailIndex,
-    isVerticalWall
-  );
+    isVerticalWall,
+  } = room;
+
+  if (upperBoundIndex - lowerBoundIndex - 2 < 0 || tailIndex - headIndex < 1) {
+    return false;
+  }
+
+  let wallIndex = generateWallIndex(room);
   const doorIndex = randInRange(headIndex, tailIndex);
 
   if (wallIndex === -1) {
@@ -172,20 +160,8 @@ const buildWall = async (
     setCellAsWall(cell);
   }
 
-  await orientWall(
-    lowerBoundIndex,
-    wallIndex - 1,
-    headIndex,
-    tailIndex,
-    isVerticalWall
-  );
-  await orientWall(
-    wallIndex + 1,
-    upperBoundIndex,
-    headIndex,
-    tailIndex,
-    isVerticalWall
-  );
+  await orientWall({ ...room, upperBoundIndex: wallIndex - 1 });
+  await orientWall({ ...room, lowerBoundIndex: wallIndex + 1 });
 
   return true;
 };
