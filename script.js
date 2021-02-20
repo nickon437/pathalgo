@@ -18,7 +18,15 @@ $('#start-btn').on('click', () => {
   }
 });
 
-$('#clear-btn').on('click', () => {
+$('#clear-path-btn').on('click', () => {
+  clearSearchResult();
+
+  app.isFirstRun = true;
+  app.board.removeClass('no-animation');
+  clearTimeout(app.removeAnimationTimeout); // For edge case, when board is cleared during board is waiting for no-animation to be added
+});
+
+$('#clear-walls-btn').on('click', () => {
   clearSearchResult();
   clearWalls();
 
@@ -26,6 +34,10 @@ $('#clear-btn').on('click', () => {
   app.board.removeClass('no-animation');
   clearTimeout(app.removeAnimationTimeout); // For edge case, when board is cleared during board is waiting for no-animation to be added
 });
+
+$('#path-finding-algorithm').on('change', () => {
+  rerenderPath();
+})
 
 $('#maze-generation-algorithm').on('change', async (e) => {
   clearSearchResult();
