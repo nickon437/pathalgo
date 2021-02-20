@@ -16,24 +16,38 @@
     <title>Pathalgo</title>
   </head>
   <body>
-    <div id="control-panel">
-      <select name="Path-finding Algorithm" id="path-finding-algorithm">
-        <option value="">Select path-finding algorithm</option>
-        <option value="bfs">Breadth-first search</option>
-        <option value="dfs">Depth-first search</option>
-      </select>
-      <select name="Maze Generation Algorithm" id="maze-generation-algorithm">
-        <option value="">Select maze generation algorithm</option>
-        <option value="random">Random</option>
-        <option value="recursive-division">Recursive division</option>
-        <option value="dfs">Depth-first search</option>
-      </select>
-      <button type="button" id="start-btn">
-        <i class="fas fa-play"></i> Start
-      </button>
-      <button type="button" id="clear-walls-btn">Clear walls</button>
-      <button type="button" id="clear-path-btn">Clear path</button>
-    </div>
+    <nav id="control-panel">
+      <span>Pathalgo</span>
+      <ul>
+        <li class="dropdown-box opened">
+          <button type="button" class="dropdown-toggle"><i class="fas fa-route"></i> Path-finding algorithm</button>
+          <ul class="dropdown-menu">
+            <li id="bfs">Breadth-first search</li>
+            <li id="dfs">Depth-first search</li>
+          </ul>
+        </li>
+        <li class="dropdown-box">
+          <button type="button" class="dropdown-toggle"><i class="fas fa-chess-board"></i> Maze generator</button>
+          <ul class="dropdown-menu">
+            <li id="random">Random</li>
+            <li id="recursive-division">Recursive division</li>
+            <li id="mg-dfs">Depth-first search</li>
+          </ul>
+        </li>
+        <li class="dropdown-box"> 
+          <button type="button" id="start-btn" class="dropdown-toggle">
+            <i class="fas fa-play"></i> Start
+          </button>
+        </li>
+        <li class="dropdown-box">
+          <button type="button"class="dropdown-toggle"><i class="fas fa-broom"></i> Clear</button>
+          <ul class="dropdown-menu">
+            <li id="clear-path">Clear path</li>
+            <li id="clear-walls">Clear walls</li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
     <div id="board" draggable="false"></div>
   </body>
 </html>

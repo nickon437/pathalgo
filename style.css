@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
 * {
   box-sizing: border-box;
 }
@@ -9,27 +11,128 @@ html {
 body {
   margin: 0;
   height: 100%;
+  font-family: 'Montserrat', sans-serif;
 }
 
 #control-panel {
   height: 10%;
   padding: 20px;
+  display: flex;
+  gap: 20px;
+  position: relative;
+  justify-content: center;
 }
 
-button, select {
-  min-height: 2rem;
-  min-width: 7rem;
-  padding: 10px;
-  font-weight: bold;
+#control-panel span {
   text-transform: uppercase;
-  background-color: #ccc;
-  color: #333;
-  border: none;
-  border-radius: 4px;
+  font-size: 2rem;
+  font-weight: bold;
+  position: absolute;
+  left: 20px;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  z-index: 1;
+  background-color: #5d6dfc;
+  flex-wrap: wrap;
+}
+
+nav > ul {
+  border-radius: 30px;
+  color: white;
+}
+
+.dropdown-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: max-content;
+}
+
+.dropdown-toggle:hover {
+  background-color: #5d6dfc;
+  color: white;
+  filter: brightness(0.9);
+}
+
+.dropdown-box:first-child:hover .dropdown-toggle {
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+}
+
+.dropdown-box:last-child:hover .dropdown-toggle{
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.dropdown-box button {
+  padding: 0 20px;
+  color: inherit;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  left: 0;
+  top: 55px;
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  overflow: hidden;
+  display: none;
+}
+
+.dropdown-box.opened .dropdown-menu {
+  display: flex;
+}
+
+.dropdown-menu li {
+  border-top: 1px solid white;
+  padding: 10px 15px;
   cursor: pointer;
 }
 
+.dropdown-menu li:first-child {
+  border-top: none;
+}
+
+.dropdown-menu li:hover {
+  background-color: inherit;
+  filter: brightness(0.9);
+}
+
+button {
+  /* min-height: 2rem;
+  min-width: 7rem;
+  padding: 10px; */
+  font-weight: bold;
+  /* text-transform: uppercase; */
+  /* background-color: #ccc; */
+  /* color: #333; */
+  border: none;
+  /* border-radius: 4px; */
+  cursor: pointer;
+  background-color: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+
+}
+
 #board {
+  background-color: #f9f8fd;
   padding: 20px;
   display: flex;
   flex-direction: column;
