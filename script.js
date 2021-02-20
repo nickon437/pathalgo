@@ -12,8 +12,19 @@ import mgDfs from './maze-generation/mgDfs.js';
 
 init();
 
-$('.dropdown-toggle').on('click', (e) => {
-  e.target.parentNode.classList.toggle('opened');
+$('.dropdown-box').on('click', (e) => {
+  let parent = e.target.parentNode;
+  while (!parent.classList.contains('dropdown-box')) {
+    parent = parent.parentNode;
+  }
+
+  const isMenuOpened = parent.classList.contains('opened');
+
+  for (const dropdown of $('.dropdown-box').toArray()) {
+    dropdown.classList.remove('opened');
+  }
+
+  isMenuOpened ? parent.classList.remove('opened') : parent.classList.add('opened');
 })
 
 // $('#start-btn').on('click', () => {

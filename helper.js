@@ -27,6 +27,8 @@ const app = {
   hasPath: false,
 
   removeAnimationTimeout: null,
+
+  selectedPathfindingAlgo: 'bfs',
 };
 
 const delay = async (duration) =>
