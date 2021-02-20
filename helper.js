@@ -103,6 +103,10 @@ const rerenderPath = () => {
   }
 };
 
+
+const rand = (max) => Math.floor(Math.random() * max + 1);
+const randInRange = (min, max) => rand(max - min) + min - 1;
+
 export {
   app,
   delay,
@@ -113,4 +117,6 @@ export {
   rerenderPath,
   clearWalls,
   clearSearchResult,
+  rand,
+  randInRange
 };

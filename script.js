@@ -6,8 +6,9 @@ import {
   clearSearchResult,
 } from './helper.js';
 import init from './init.js';
-import buildBasicRandMaze from './basic-rand-maze.js';
-import buildRecursiveMaze from './recursive-division.js';
+import buildBasicRandMaze from './maze-generation/basic-rand-maze.js';
+import buildRecursiveMaze from './maze-generation/recursive-division.js';
+import mgDfs from './maze-generation/mgDfs.js';
 
 init();
 
@@ -36,6 +37,11 @@ $('#maze-generation-algorithm').on('change', async (e) => {
       break;
     case 'recursive-division':
       await buildRecursiveMaze();
+      break;
+    case 'dfs':
+      await mgDfs();
+      break;
+    default:
       break;
   }
 

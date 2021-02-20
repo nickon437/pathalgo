@@ -1,4 +1,4 @@
-import { app, markCellAsWall } from './helper.js';
+import { app, markCellAsWall } from '../helper.js';
 
 const rand = () => Math.floor(Math.random() * 10 + 1);
 
