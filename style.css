@@ -8,6 +8,21 @@ html {
   height: 100%;
 }
 
+:root {
+  --border-color: #ccc;
+  --background-color: white;
+  --text-color: black;
+  --control-color: #5d6dfc;
+  --wall-color: #333;
+}
+
+body.dark {
+  --border-color: #4b4f52;
+  --background-color: #202124;
+  --text-color: white;
+  --wall-color: #eee;
+}
+
 body {
   margin: 0;
   height: 100%;
@@ -22,6 +37,8 @@ nav {
   position: relative;
   justify-content: center;
   align-items: center;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 nav > span {
@@ -39,7 +56,7 @@ nav ul {
   padding: 0;
   display: flex;
   z-index: 1;
-  background-color: #5d6dfc;
+  background-color: var(--control-color);
   flex-wrap: wrap;
 }
 
@@ -59,7 +76,7 @@ nav > ul {
 }
 
 .dropdown-toggle:hover {
-  background-color: #5d6dfc;
+  background-color: var(--control-color);
   color: white;
   filter: brightness(0.9);
 }
@@ -159,13 +176,13 @@ button {
 }
 
 #board {
-  background-color: #f9f8fd;
+  background-color: var(--background-color);
   padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid #ccc;
+  border-top: 1px solid var(--border-color);
   height: 90%;
 }
 
@@ -174,7 +191,7 @@ button {
 }
 
 .cell {
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   height: 25px;
   width: 25px;
   position: relative;
@@ -182,7 +199,7 @@ button {
 }
 
 .wall {
-  border: 1px solid #333;
+  border: 1px solid var(--wall-color);
 }
 
 .start {
@@ -196,7 +213,7 @@ button {
 }
 
 .visited{
-  border-color: white;
+  border-color: var(--border-color);
 }
 
 .cell::before {
@@ -254,7 +271,7 @@ button {
 }
 
 .wall.cell::before {
-  background-color: #333;
+  background-color: var(--wall-color);
   transform: scale(100%);
   border-radius: 0;
   transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
