@@ -14,7 +14,7 @@ body {
   font-family: 'Montserrat', sans-serif;
 }
 
-#control-panel {
+nav {
   height: 10%;
   padding: 20px;
   display: flex;
@@ -24,7 +24,7 @@ body {
   align-items: center;
 }
 
-#control-panel > span {
+nav > span {
   text-transform: uppercase;
   font-size: 2rem;
   font-weight: bold;
@@ -46,7 +46,6 @@ nav ul {
 nav > ul {
   border-radius: 30px;
   color: white;
-  height: 50px;
 }
 
 .dropdown-box {
@@ -56,6 +55,7 @@ nav > ul {
   justify-content: center;
   flex-direction: column;
   width: max-content;
+  height: 50px;
 }
 
 .dropdown-toggle:hover {
@@ -64,17 +64,17 @@ nav > ul {
   filter: brightness(0.9);
 }
 
-.dropdown-box:first-child:hover .dropdown-toggle {
+.dropdown-box:first-child .dropdown-toggle:hover {
   border-top-left-radius: 30px;
   border-bottom-left-radius: 30px;
 }
 
-.dropdown-box:last-child:hover .dropdown-toggle{
+.dropdown-box:last-child .dropdown-toggle:hover {
   border-top-right-radius: 30px;
   border-bottom-right-radius: 30px;
 }
 
-.dropdown-box .dropdown-toggle {
+.dropdown-toggle {
   padding: 0 20px;
   color: inherit;
   height: 100%;
@@ -131,6 +131,13 @@ nav > ul {
   font-weight: normal;
   font-size: 12px;
   color: #ddd;
+}
+
+#start-btn {
+  border-radius: 50%;
+  background-color: #343f9e;
+  /* height: 250%; */
+  /* height: 130%; */
 }
 
 button {
@@ -267,5 +274,58 @@ button {
     border-radius: 0;
     background-color: #67d1e6;
     transform: scale(100%);
+  }
+}
+
+@media screen and (max-width: 1200px) and (min-width: 899px) {
+  nav > ul {
+    margin-left: auto;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  nav > span {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  html {
+    font-size: 13px;
+  }
+
+  .dropdown-toggle {
+    padding: 0 15px;
+  }
+
+  nav {
+    height: 35%;
+  }
+
+  #board {
+    height: 70%;
+  }
+
+  nav > ul {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .dropdown-box, .dropdown-toggle {
+    width: 100%;
+  }
+
+  #start-btn {
+    border-radius: 0;
+  }
+
+  .dropdown-box:first-child .dropdown-toggle:hover {
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 30px;
+  }
+
+  .dropdown-box:last-child .dropdown-toggle:hover {
+    border-bottom-left-radius: 30px;
+    border-top-right-radius: 0;
   }
 }
