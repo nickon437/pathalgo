@@ -19,7 +19,7 @@
     <nav id="control-panel">
       <span>Pathalgo</span>
       <ul>
-        <li class="dropdown-box opened">
+        <li class="dropdown-box opened" id="path-finding-dropdown">
           <a href="#" class="dropdown-toggle">
             <i class="fas fa-route"></i>
             <span>
@@ -29,20 +29,20 @@
             </span>
           </a>
           <ul class="dropdown-menu">
-            <li id="bfs">Breadth-first search</li>
-            <li id="dfs">Depth-first search</li>
+            <li id="bfs" class="dropdown-item">Breadth-first search</li>
+            <li id="dfs" class="dropdown-item">Depth-first search</li>
           </ul>
         </li>
-        <li class="dropdown-box">
+        <li class="dropdown-box" id="maze-generator-dropdown">
           <a href="#" class="dropdown-toggle">
             <i class="fas fa-chess-board"></i>
             Maze generator
             <i class="fas fa-caret-down"></i>
           </a>
           <ul class="dropdown-menu">
-            <li id="random">Random</li>
-            <li id="recursive-division">Recursive division</li>
-            <li id="mg-dfs">Depth-first search</li>
+            <li id="random" class="dropdown-item">Random</li>
+            <li id="recursive-division" class="dropdown-item">Recursive division</li>
+            <li id="mgDfs" class="dropdown-item">Depth-first search</li>
           </ul>
         </li>
         <li class="dropdown-box">
@@ -50,13 +50,13 @@
             <i class="fas fa-play"></i> Start
           </button>
         </li>
-        <li class="dropdown-box">
+        <li class="dropdown-box" id="clear-dropdown">
           <a href="#" class="dropdown-toggle">
             <i class="fas fa-broom"></i>Clear<i class="fas fa-caret-down"></i>
           </a>
           <ul class="dropdown-menu">
-            <li id="clear-path">Clear path</li>
-            <li id="clear-walls">Clear walls</li>
+            <li id="clear-path" class="dropdown-item">Clear path</li>
+            <li id="clear-walls" class="dropdown-item">Clear walls</li>
           </ul>
         </li>
       </ul>

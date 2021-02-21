@@ -24,53 +24,62 @@ $('.dropdown-box').on('click', (e) => {
     dropdown.classList.remove('opened');
   }
 
-  isMenuOpened ? parent.classList.remove('opened') : parent.classList.add('opened');
-})
+  isMenuOpened
+    ? parent.classList.remove('opened')
+    : parent.classList.add('opened');
+});
 
-// $('#start-btn').on('click', () => {
-//   if (app.start && app.target) {
-//     startPathFinding();
-//   }
-// });
+$('#path-finding-dropdown').on('click', (e) => {
+  switch (e.target.id) {
+    case 'bfs':
+    case 'dfs':
+      $('#path-finding-dropdown small').text(e.target.innerText);
+      app.selectedPathfindingAlgo = e.target.id;
+      break;
+    default:
+      break;
+  }
+});
 
-// $('#clear-path-btn').on('click', () => {
-//   clearSearchResult();
+$('#start-btn').on('click', () => {
+  if (app.start && app.target) {
+    startPathFinding();
+  }
+});
 
-//   app.isFirstRun = true;
-//   app.board.removeClass('no-animation');
-//   clearTimeout(app.removeAnimationTimeout); // For edge case, when board is cleared during board is waiting for no-animation to be added
-// });
+$('#maze-generator-dropdown').on('click', async (e) => {
+  if (e.target.classList.contains('dropdown-item')) {
+    clearSearchResult();
+    clearWalls();
 
-// $('#clear-walls-btn').on('click', () => {
-//   clearSearchResult();
-//   clearWalls();
+    switch (e.target.id) {
+      case 'random':
+        buildBasicRandMaze();
+        break;
+      case 'recursive-division':
+        await buildRecursiveMaze();
+        break;
+      case 'mgDfs':
+        await mgDfs();
+        break;
+      default:
+        break;
+    }
 
-//   app.isFirstRun = true;
-//   app.board.removeClass('no-animation');
-//   clearTimeout(app.removeAnimationTimeout); // For edge case, when board is cleared during board is waiting for no-animation to be added
-// });
+    rerenderPath();
+  }
+});
 
-// $('#path-finding-algorithm').on('change', () => {
-//   rerenderPath();
-// })
+$('#clear-dropdown').on('click', (e) => {
+  if (e.target.classList.contains('dropdown-item')) {
+    clearSearchResult();
 
-// $('#maze-generation-algorithm').on('change', async (e) => {
-//   clearSearchResult();
-//   clearWalls();
+    app.isFirstRun = true;
+    app.board.removeClass('no-animation');
+    clearTimeout(app.removeAnimationTimeout); // For edge case, when board is cleared during board is waiting for no-animation to be added
 
-//   switch (e.target.value) {
-//     case 'random':
-//       buildBasicRandMaze();
-//       break;
-//     case 'recursive-division':
-//       await buildRecursiveMaze();
-//       break;
-//     case 'dfs':
-//       await mgDfs();
-//       break;
-//     default:
-//       break;
-//   }
-
-//   rerenderPath();
-// });
+    if (e.target.id === 'clear-walls') {
+      clearWalls();
+    }
+  }
+});

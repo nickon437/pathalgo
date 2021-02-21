@@ -86,7 +86,7 @@ const clearSearchResult = () => {
 };
 
 const startPathFinding = () => {
-  switch ($('#path-finding-algorithm').val()) {
+  switch (app.selectedPathfindingAlgo) {
     case 'bfs':
       bfs();
       break;
