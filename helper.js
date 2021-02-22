@@ -1,5 +1,6 @@
 import dfs from './dfs.js';
 import bfs from './bfs.js';
+import { trimUserPath } from './manual-control.js';
 
 const app = {
   board: $('#board'),
@@ -49,6 +50,12 @@ const markCellAsWall = (cell, shouldRerender = false) => {
     cell.classList.add('wall');
     app.wallCells.push(cell);
 
+    if (app.userPath.includes(cell)) {
+      const newHead = cell.previousUserPath;
+      trimUserPath(newHead);
+      newHead.classList.add('head');
+    }
+
     if (shouldRerender) {
       rerenderPath();
     }
@@ -86,7 +93,20 @@ const clearSearchResult = () => {
   }
 };
 
+const clearUserPath = () => {
+  while (app.userPath.length > 0) {
+    const cell = app.userPath.shift();
+    cell.classList.remove('user');
+    cell.classList.remove('head');
+    cell.previousUserPath = null;
+  }
+  app.userPath = [app.start];
+};
+
 const startPathFinding = () => {
+  clearSearchResult();
+  clearUserPath();
+
   switch (app.selectedPathfindingAlgo) {
     case 'bfs':
       bfs();
@@ -101,7 +121,6 @@ const startPathFinding = () => {
 
 const rerenderPath = () => {
   if (!app.isFirstRun) {
-    clearSearchResult();
     startPathFinding();
   }
 };
@@ -123,6 +142,7 @@ export {
   rerenderPath,
   clearWalls,
   clearSearchResult,
+  clearUserPath,
   rand,
   randInRange,
   getLast,

@@ -4,6 +4,7 @@ import {
   rerenderPath,
   clearWalls,
   clearSearchResult,
+  clearUserPath,
 } from './helper.js';
 import init from './init.js';
 import setupManualControl from './manual-control.js';
@@ -53,6 +54,7 @@ $('#maze-generator-dropdown').on('click', async (e) => {
   if (e.target.classList.contains('dropdown-item')) {
     clearSearchResult();
     clearWalls();
+    clearUserPath();
 
     switch (e.target.id) {
       case 'random':

@@ -3,10 +3,10 @@ import { app, getLast } from './helper.js';
 const markCellAsUserPath = (cell) => {
   cell.classList.add('head');
   cell.classList.add('user');
-  app.userPath.push(cell);
   if (cell !== app.start) {
-    cell.previousUserPath =  getLast(app.userPath);
+    cell.previousUserPath = getLast(app.userPath);
   }
+  app.userPath.push(cell);
 };
 
 const unmarkCellAsUserPath = (cell) => {
@@ -15,22 +15,22 @@ const unmarkCellAsUserPath = (cell) => {
   app.userPath = app.userPath.filter((curCell) => curCell !== cell);
 };
 
-const cutUserPath = (nextCell) => {
+const trimUserPath = (nextCell) => {
   let userHeadCell = getLast(app.userPath);
 
   if (app.userPath.includes(nextCell)) {
     userHeadCell.classList.remove('head');
-    
+
     // Back-track
     while (userHeadCell !== nextCell) {
       unmarkCellAsUserPath(userHeadCell);
       userHeadCell = getLast(app.userPath);
     }
   }
-}
+};
 
 const press = (e) => {
-  if (e.keyCode > 36 && e.keyCode < 41) {
+  if (e.keyCode > 36 && e.keyCode < 41 && app.visitedCells.length <= 0) {
     let userHeadCell = getLast(app.userPath);
     let nextCell;
 
@@ -44,7 +44,7 @@ const press = (e) => {
       nextCell = userHeadCell.neigh['south'];
     }
 
-    cutUserPath(nextCell);
+    trimUserPath(nextCell);
     userHeadCell = getLast(app.userPath);
 
     if (nextCell && !nextCell.isWall) {
@@ -60,3 +60,4 @@ const setupManualControl = () => {
 };
 
 export default setupManualControl;
+export { trimUserPath };
