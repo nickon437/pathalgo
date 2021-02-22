@@ -201,7 +201,11 @@ button {
 }
 
 .wall {
-  border: 1px solid var(--wall-color);
+  border-color: var(--wall-color);
+}
+
+.user {
+  border-color: var(--background-color);
 }
 
 .start {
@@ -233,10 +237,6 @@ button {
   justify-content: center;
 }
 
-.start.cell::before {
-  content: "\f024";
-}
-
 .target.cell::before {
   content: "\f192";
 }
@@ -251,7 +251,22 @@ button {
   background-color: #67d1e6;
 }
 
-.start.visited.cell::before {
+.user.cell::before {
+  content: "";
+  animation: none;
+  background-color: orchid;
+  border-radius: 0;
+  transition-property: background-color border-radius;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.head.user.cell::before {
+  content: "\f2bd";
+}
+
+.start.cell::before, .start.visited.cell::before {
+  content: "\f024";
   animation: none;
   background-color: royalblue;
 }

@@ -6,11 +6,13 @@ import {
   clearSearchResult,
 } from './helper.js';
 import init from './init.js';
+import setupManualControl from './manual-control.js';
 import buildBasicRandMaze from './maze-generation/basic-rand-maze.js';
 import buildRecursiveMaze from './maze-generation/recursive-division.js';
 import mgDfs from './maze-generation/mgDfs.js';
 
 init();
+setupManualControl();
 
 $('.dropdown-box').on('click', (e) => {
   let parent = e.target.parentNode;
@@ -83,3 +85,4 @@ $('#clear-dropdown').on('click', (e) => {
     }
   }
 });
+

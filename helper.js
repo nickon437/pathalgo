@@ -15,6 +15,7 @@ const app = {
   LAYING_PATH_DURATION: 50,
 
   queue: [],
+  userPath: [],
   path: [],
   visitedCells: [],
   wallCells: [],
