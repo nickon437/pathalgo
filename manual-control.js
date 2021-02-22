@@ -1,7 +1,16 @@
 import { app, getLast } from './helper.js';
 
-const markCellAsUserPath = (cell) => {
+const marCellAsHead = (cell) => {
+  app.userPathHead?.classList.remove('head');
+
+  app.userPathHead = cell;
   cell.classList.add('head');
+  cell === app.target ? app.board.addClass('completed-path') : app.board.removeClass('completed-path');
+}
+
+const markCellAsUserPath = (cell) => {
+  marCellAsHead(cell);
+  
   cell.classList.add('user');
   if (cell !== app.start) {
     cell.previousUserPath = getLast(app.userPath);
@@ -19,8 +28,6 @@ const trimUserPath = (nextCell) => {
   let userHeadCell = getLast(app.userPath);
 
   if (app.userPath.includes(nextCell)) {
-    userHeadCell.classList.remove('head');
-
     // Back-track
     while (userHeadCell !== nextCell) {
       unmarkCellAsUserPath(userHeadCell);
@@ -45,10 +52,8 @@ const press = (e) => {
     }
 
     trimUserPath(nextCell);
-    userHeadCell = getLast(app.userPath);
 
     if (nextCell && !nextCell.isWall) {
-      userHeadCell.classList.remove('head');
       markCellAsUserPath(nextCell);
     }
   }

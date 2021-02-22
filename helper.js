@@ -11,6 +11,7 @@ const app = {
   start: null,
   target: null,
   lastMouseEnteredCell: null,
+  userPathHead: null,
 
   INSPECTING_CELL_DURATION: 5,
   LAYING_PATH_DURATION: 50,
@@ -91,6 +92,8 @@ const clearSearchResult = () => {
     cell.isVisited = false;
     cell.classList.remove('visited');
   }
+
+  clearUserPath();
 };
 
 const clearUserPath = () => {
@@ -105,7 +108,6 @@ const clearUserPath = () => {
 
 const startPathFinding = () => {
   clearSearchResult();
-  clearUserPath();
 
   switch (app.selectedPathfindingAlgo) {
     case 'bfs':

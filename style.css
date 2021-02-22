@@ -232,13 +232,15 @@ button {
 .user.cell::before {
   content: "";
   animation: none;
-  background-color: orchid;
   background-color: cornflowerblue;
-  /* background-color: mediumseagreen; */
   border-radius: 0;
   transition-property: background-color border-radius;
   transition-duration: 0.3s;
   transition-timing-function: ease;
+}
+
+.completed-path .user.cell::before {
+  background-color: mediumseagreen;
 }
 
 .head.cell::before {
