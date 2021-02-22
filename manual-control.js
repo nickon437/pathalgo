@@ -1,10 +1,11 @@
-import { app } from './helper.js';
+import { app, getLast } from './helper.js';
 
 const markCellAsUserPath = (cell) => {
+  cell.classList.add('head');
   cell.classList.add('user');
   app.userPath.push(cell);
   if (cell !== app.start) {
-    cell.previousUserPath = app.userPath[app.userPath.length - 1];
+    cell.previousUserPath =  getLast(app.userPath);
   }
 };
 
@@ -14,9 +15,23 @@ const unmarkCellAsUserPath = (cell) => {
   app.userPath = app.userPath.filter((curCell) => curCell !== cell);
 };
 
+const cutUserPath = (nextCell) => {
+  let userHeadCell = getLast(app.userPath);
+
+  if (app.userPath.includes(nextCell)) {
+    userHeadCell.classList.remove('head');
+    
+    // Back-track
+    while (userHeadCell !== nextCell) {
+      unmarkCellAsUserPath(userHeadCell);
+      userHeadCell = getLast(app.userPath);
+    }
+  }
+}
+
 const press = (e) => {
   if (e.keyCode > 36 && e.keyCode < 41) {
-    let userHeadCell = app.userPath[app.userPath.length - 1];
+    let userHeadCell = getLast(app.userPath);
     let nextCell;
 
     if (e.keyCode === 37) {
@@ -29,19 +44,11 @@ const press = (e) => {
       nextCell = userHeadCell.neigh['south'];
     }
 
-    if (app.userPath.includes(nextCell)) {
-      userHeadCell.classList.remove('head');
-      
-      // Back-track
-      while (userHeadCell !== nextCell) {
-        unmarkCellAsUserPath(userHeadCell);
-        userHeadCell = app.userPath[app.userPath.length - 1];
-      }
-    }
+    cutUserPath(nextCell);
+    userHeadCell = getLast(app.userPath);
 
     if (nextCell && !nextCell.isWall) {
       userHeadCell.classList.remove('head');
-      nextCell.classList.add('head');
       markCellAsUserPath(nextCell);
     }
   }

@@ -106,9 +106,12 @@ const rerenderPath = () => {
   }
 };
 
-
 const rand = (max) => Math.floor(Math.random() * max + 1);
 const randInRange = (min, max) => rand(max - min) + min - 1;
+
+const getLast = (array) => {
+  return array[array.length - 1];
+};
 
 export {
   app,
@@ -121,5 +124,6 @@ export {
   clearWalls,
   clearSearchResult,
   rand,
-  randInRange
+  randInRange,
+  getLast,
 };

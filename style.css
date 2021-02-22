@@ -160,21 +160,13 @@ nav > ul {
 }
 
 button {
-  /* min-height: 2rem;
-  min-width: 7rem;
-  padding: 10px; */
   font-weight: bold;
-  /* text-transform: uppercase; */
-  /* background-color: #ccc; */
-  /* color: #333; */
   border: none;
-  /* border-radius: 4px; */
   cursor: pointer;
   background-color: transparent;
   color: inherit;
   font-family: inherit;
   font-size: inherit;
-
 }
 
 #board {
@@ -200,26 +192,16 @@ button {
   cursor: pointer;
 }
 
-.wall {
-  border-color: var(--wall-color);
-}
-
 .user {
   border-color: var(--background-color);
 }
 
-.start {
-  background-color: royalblue;
-  cursor: grab;
-}
-
-.target {
-  background-color: crimson;
-  cursor: grab;
-}
-
 .visited{
   border-color: var(--background-color);
+}
+
+.wall {
+  border-color: var(--wall-color);
 }
 
 .cell::before {
@@ -237,10 +219,6 @@ button {
   justify-content: center;
 }
 
-.target.cell::before {
-  content: "\f192";
-}
-
 .visited.cell::before {
   animation: visit 3s ease forwards;
 }
@@ -255,20 +233,31 @@ button {
   content: "";
   animation: none;
   background-color: orchid;
+  background-color: cornflowerblue;
+  /* background-color: mediumseagreen; */
   border-radius: 0;
   transition-property: background-color border-radius;
   transition-duration: 0.3s;
   transition-timing-function: ease;
 }
 
-.head.user.cell::before {
+.head.cell::before {
   content: "\f2bd";
 }
 
 .start.cell::before, .start.visited.cell::before {
   content: "\f024";
   animation: none;
+  border-radius: 0;
   background-color: royalblue;
+  cursor: grab;
+}
+
+.target.cell::before {
+  content: "\f192";
+  border-radius: 0;
+  background-color: crimson;
+  cursor: grab;
 }
 
 .path.visited.cell::before {
