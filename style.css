@@ -192,7 +192,7 @@ button {
   cursor: pointer;
 }
 
-.user {
+.user-path {
   border-color: var(--background-color);
 }
 
@@ -229,7 +229,7 @@ button {
   background-color: #67d1e6;
 }
 
-.user.cell::before {
+.user-path.cell::before {
   content: "";
   animation: none;
   background-color: cornflowerblue;
@@ -239,7 +239,7 @@ button {
   transition-timing-function: ease;
 }
 
-.completed-path .user.cell::before {
+.completed-path .user-path.cell::before {
   background-color: mediumseagreen;
 }
 

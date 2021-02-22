@@ -5,63 +5,71 @@ const marCellAsHead = (cell) => {
 
   app.userPathHead = cell;
   cell.classList.add('head');
-  cell === app.target ? app.board.addClass('completed-path') : app.board.removeClass('completed-path');
-}
+  cell === app.target
+    ? app.board.addClass('completed-path')
+    : app.board.removeClass('completed-path');
+};
 
-const markCellAsUserPath = (cell) => {
-  marCellAsHead(cell);
-  
-  cell.classList.add('user');
+const marCellAsUserPath = (cell) => {
+  cell.classList.add('user-path');
   if (cell !== app.start) {
     cell.previousUserPath = getLast(app.userPath);
   }
   app.userPath.push(cell);
+}
+
+const addUserPathHead = (cell) => {
+  marCellAsHead(cell);
+  marCellAsUserPath(cell);
 };
 
-const unmarkCellAsUserPath = (cell) => {
-  cell.classList.remove('user');
-  cell.previousUserPath = null;
-  app.userPath = app.userPath.filter((curCell) => curCell !== cell);
+const removeUserPathHead = () => {
+  app.userPathHead.classList.remove('user-path');
+  app.userPathHead.classList.remove('head');
+  app.userPathHead.previousUserPath = null;
+  app.userPath = app.userPath.filter((curCell) => curCell !== app.userPathHead);
 };
 
 const trimUserPath = (nextCell) => {
-  let userHeadCell = getLast(app.userPath);
-
   if (app.userPath.includes(nextCell)) {
     // Back-track
-    while (userHeadCell !== nextCell) {
-      unmarkCellAsUserPath(userHeadCell);
-      userHeadCell = getLast(app.userPath);
+    while (app.userPathHead !== nextCell) {
+      removeUserPathHead(app.userPathHead);
+      app.userPathHead = getLast(app.userPath);
     }
   }
 };
 
 const press = (e) => {
   if (e.keyCode > 36 && e.keyCode < 41 && app.visitedCells.length <= 0) {
-    let userHeadCell = getLast(app.userPath);
     let nextCell;
 
     if (e.keyCode === 37) {
-      nextCell = userHeadCell.neigh['west'];
+      nextCell = app.userPathHead.neigh['west'];
     } else if (e.keyCode === 38) {
-      nextCell = userHeadCell.neigh['north'];
+      nextCell = app.userPathHead.neigh['north'];
     } else if (e.keyCode === 39) {
-      nextCell = userHeadCell.neigh['east'];
+      nextCell = app.userPathHead.neigh['east'];
     } else if (e.keyCode === 40) {
-      nextCell = userHeadCell.neigh['south'];
+      nextCell = app.userPathHead.neigh['south'];
+    }
+
+    // Once user reach target, they can only backtrack
+    if (app.userPathHead === app.target && !app.userPath.includes(nextCell)) {
+      return;
     }
 
     trimUserPath(nextCell);
 
     if (nextCell && !nextCell.isWall) {
-      markCellAsUserPath(nextCell);
+      addUserPathHead(nextCell);
     }
   }
 };
 
 const setupManualControl = () => {
   document.onkeydown = press;
-  markCellAsUserPath(app.start);
+  addUserPathHead(app.start);
 };
 
 export default setupManualControl;

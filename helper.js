@@ -99,11 +99,12 @@ const clearSearchResult = () => {
 const clearUserPath = () => {
   while (app.userPath.length > 0) {
     const cell = app.userPath.shift();
-    cell.classList.remove('user');
+    cell.classList.remove('user-path');
     cell.classList.remove('head');
     cell.previousUserPath = null;
   }
   app.userPath = [app.start];
+  app.userPathHead = app.start;
 };
 
 const startPathFinding = () => {
