@@ -1,6 +1,6 @@
 import { app, getLast } from './helper.js';
 
-const marCellAsHead = (cell) => {
+const markCellAsHead = (cell) => {
   app.userPathHead?.classList.remove('head');
 
   app.userPathHead = cell;
@@ -10,7 +10,7 @@ const marCellAsHead = (cell) => {
     : app.board.removeClass('completed-path');
 };
 
-const marCellAsUserPath = (cell) => {
+const markCellAsUserPath = (cell) => {
   cell.classList.add('user-path');
   if (cell !== app.start) {
     cell.previousUserPath = getLast(app.userPath);
@@ -19,15 +19,20 @@ const marCellAsUserPath = (cell) => {
 }
 
 const addUserPathHead = (cell) => {
-  marCellAsHead(cell);
-  marCellAsUserPath(cell);
+  markCellAsHead(cell);
+  markCellAsUserPath(cell);
 };
 
 const removeUserPathHead = () => {
-  app.userPathHead.classList.remove('user-path');
-  app.userPathHead.classList.remove('head');
+  app.userPathHead.classList.remove('user-path', 'head');
   app.userPathHead.previousUserPath = null;
   app.userPath = app.userPath.filter((curCell) => curCell !== app.userPathHead);
+
+  if (app.userPath.length > 0) {
+    app.userPathHead = getLast(app.userPath);
+  } else {
+    addUserPathHead(app.start);
+  }
 };
 
 const trimUserPath = (nextCell) => {
@@ -35,7 +40,6 @@ const trimUserPath = (nextCell) => {
     // Back-track
     while (app.userPathHead !== nextCell) {
       removeUserPathHead(app.userPathHead);
-      app.userPathHead = getLast(app.userPath);
     }
   }
 };
@@ -73,4 +77,4 @@ const setupManualControl = () => {
 };
 
 export default setupManualControl;
-export { trimUserPath };
+export { trimUserPath, removeUserPathHead };

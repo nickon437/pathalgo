@@ -1,6 +1,6 @@
 import dfs from './dfs.js';
 import bfs from './bfs.js';
-import { trimUserPath } from './manual-control.js';
+import { trimUserPath, removeUserPathHead } from './manual-control.js';
 
 const app = {
   board: $('#board'),
@@ -97,14 +97,9 @@ const clearSearchResult = () => {
 };
 
 const clearUserPath = () => {
-  while (app.userPath.length > 0) {
-    const cell = app.userPath.shift();
-    cell.classList.remove('user-path');
-    cell.classList.remove('head');
-    cell.previousUserPath = null;
+  while (app.userPathHead !== app.start || app.userPath.length !== 1) {
+    removeUserPathHead();
   }
-  app.userPath = [app.start];
-  app.userPathHead = app.start;
 };
 
 const startPathFinding = () => {

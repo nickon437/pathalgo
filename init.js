@@ -3,6 +3,7 @@ import {
   markCellAsWall,
   unmarkCellAsWall,
   rerenderPath,
+  clearUserPath,
 } from './helper.js';
 
 const CELL_SIZE = 25;
@@ -84,11 +85,13 @@ const mapBoarArr = () => {
             app.start = cell === app.target ? app.lastMouseEnteredCell : cell;
             app.start.classList.add('start');
             app.start.classList.remove('wall');
+            clearUserPath();
             rerenderPath();
           } else if (app.isMovingTarget) {
             app.target = cell === app.start ? app.lastMouseEnteredCell : cell;
             app.target.classList.add('target');
             app.target.classList.remove('wall');
+            clearUserPath();
             rerenderPath();
           } else if (app.isSmashingWall) {
             unmarkCellAsWall(cell);
