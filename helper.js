@@ -22,6 +22,8 @@ const app = {
   visitedCells: [],
   wallCells: [],
 
+  state: 'waiting', // Possible states: waiitng, searching, finished
+
   isMouseDown: false,
   isMovingStart: false,
   isMovingTarget: false,
@@ -44,6 +46,13 @@ const markCellVisited = (cell) => {
 
   app.queue.push(cell);
 };
+
+const unmarkCellAsVisited = (cell) => {
+  app.visitedCells = app.visitedCells.filter((curCell) => curCell !== cell);
+  app.queue = app.queue.filter((curCell) => curCell !== cell);
+  cell.classList.remove('visited');
+  cell.isVisited = false;
+}
 
 const markCellAsWall = (cell, shouldRerender = false) => {
   if (cell !== app.start && cell !== app.target) {
@@ -89,8 +98,7 @@ const clearSearchResult = () => {
 
   while (app.visitedCells.length > 0) {
     const cell = app.visitedCells.shift();
-    cell.isVisited = false;
-    cell.classList.remove('visited');
+    unmarkCellAsVisited(cell);
   }
 
   clearUserPath();
@@ -103,6 +111,7 @@ const clearUserPath = () => {
 };
 
 const startPathFinding = () => {
+  app.state = 'searching';
   clearSearchResult();
 
   switch (app.selectedPathfindingAlgo) {
@@ -134,6 +143,7 @@ export {
   app,
   delay,
   markCellVisited,
+  unmarkCellAsVisited,
   markCellAsWall,
   unmarkCellAsWall,
   startPathFinding,

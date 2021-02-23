@@ -1,4 +1,4 @@
-import { app, delay, markCellVisited } from './helper.js';
+import { app, delay, markCellVisited, clearSearchResult } from './helper.js';
 
 const layPath = async (cell) => {
   if (app.isFirstRun) {
@@ -47,6 +47,12 @@ const search = async (cell) => {
     return;
   }
 
+  // Early termination if user clear while searching
+  if (app.state !== 'searching') {
+    clearSearchResult();
+    return;
+  }
+
   await search(app.queue.shift());
 };
 
@@ -55,6 +61,10 @@ const bfs = async () => {
 
   await search(app.queue.shift());
 
+  if (app.state !== 'searching') {
+    return;
+  }
+
   app.removeAnimationTimeout = setTimeout(() => {
     app.board.addClass('no-animation');
   }, 2000);
@@ -62,6 +72,8 @@ const bfs = async () => {
   if (!app.hasPath) {
     app.isFirstRun = false;
   }
+
+  app.state = 'finished';
 };
 
 export default bfs;

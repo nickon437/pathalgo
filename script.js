@@ -76,6 +76,7 @@ $('#maze-generator-dropdown').on('click', async (e) => {
 
 $('#clear-dropdown').on('click', (e) => {
   if (e.target.classList.contains('dropdown-item')) {
+    app.state = 'finished';
     clearSearchResult();
 
     app.isFirstRun = true;
@@ -85,6 +86,8 @@ $('#clear-dropdown').on('click', (e) => {
     if (e.target.id === 'clear-walls') {
       clearWalls();
     }
+
+    app.state = 'waiting';
   }
 });
 

@@ -1,4 +1,4 @@
-import { app, delay, markCellVisited } from './helper.js';
+import { app, delay, markCellVisited, clearSearchResult } from './helper.js';
 
 const layPath = async (cell) => {
   if (app.isFirstRun) {
@@ -20,7 +20,7 @@ const visitCell = async (previous, cell) => {
     if (app.isFirstRun) {
       await delay(app.INSPECTING_CELL_DURATION);
     }
-    
+
     cell.previous = previous;
     markCellVisited(cell);
 
@@ -37,6 +37,12 @@ const visitCell = async (previous, cell) => {
 const search = async (cell) => {
   const DIRECTIONS = ['north', 'east', 'south', 'west'];
   for (const dir of DIRECTIONS) {
+    // Early termination if user clear while searching
+    if (app.state !== 'searching') {
+      clearSearchResult();
+      return;
+    }
+
     const neigh = cell.neigh[dir];
     await visitCell(cell, neigh);
 
@@ -51,6 +57,10 @@ const dfs = async () => {
 
   await search(app.start);
 
+  if (app.state !== 'searching') {
+    return;
+  }
+
   app.removeAnimationTimeout = setTimeout(() => {
     app.board.addClass('no-animation');
   }, 2000);
@@ -58,6 +68,8 @@ const dfs = async () => {
   if (!app.hasPath) {
     app.isFirstRun = false;
   }
+
+  app.state = 'finished';
 };
 
 export default dfs;
