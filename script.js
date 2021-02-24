@@ -42,6 +42,7 @@ $('#path-finding-dropdown').on('click', (e) => {
     default:
       break;
   }
+  rerenderPath();
 });
 
 $('.start-btn').on('click', () => {
