@@ -45,12 +45,14 @@
             <li id="mgDfs" class="dropdown-item">Depth-first search</li>
           </ul>
         </li>
-        <li class="dropdown-box" id="start-dropdown">
-          <button type="button" id="start-btn" class="dropdown-toggle">
+
+
+        <li class="dropdown-box start-dropdown lg">
+          <button type="button" class="dropdown-toggle start-btn">
             <i class="fas fa-play"></i>
           </button>
         </li>
-        <li class="dropdown-box" id="clear-dropdown">
+        <li class="dropdown-box clear-dropdown lg">
           <a href="#" class="dropdown-toggle">
             <i class="fas fa-eraser"></i>Clear<i class="fas fa-caret-down"></i>
           </a>
@@ -58,6 +60,57 @@
             <li id="clear-path" class="dropdown-item">Clear path</li>
             <li id="clear-walls" class="dropdown-item">Clear walls</li>
           </ul>
+        </li>
+        <li class="dropdown-box info-dropdown lg">
+          <a href="#" class="dropdown-toggle">
+            <i class="fas fa-question-circle"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-item"><div class="cell start"></div> Start node</li>
+            <li class="dropdown-item"><div class="cell target"></div> Target node</li>
+            <li class="dropdown-item"><div class="cell no-border-radius"></div> Unvisited node</li>
+            <li class="dropdown-item"><div class="cell no-border-radius"></div> Unvisited node</li>
+            <li class="dropdown-item no-animation"><div class="cell visited"></div> Visited node</li>
+            <li class="dropdown-item"><div class="cell visited path"></div> Shortest path</li>
+            <li class="dropdown-item"><div class="cell user-path"></div> User path</li>
+            <li class="dropdown-item completed-path"><div class="cell user-path"></div> Completed user path</li>
+            <li class="dropdown-item"><div class="cell wall"></div> Wall</li>
+          </ul>
+        </li>
+
+
+        <li id="small-control">
+          <div class="dropdown-box clear-dropdown sm">
+            <a href="#" class="dropdown-toggle">
+              <i class="fas fa-eraser"></i>Clear<i class="fas fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <li id="clear-path" class="dropdown-item">Clear path</li>
+              <li id="clear-walls" class="dropdown-item">Clear walls</li>
+            </ul>
+          </div>
+          <div class="dropdown-box start-dropdown sm">
+            <button type="button" class="dropdown-toggle start-btn">
+              <i class="fas fa-play"></i>
+            </button>
+          </div>
+          <div class="dropdown-box info-dropdown sm">
+            <a href="#" class="dropdown-toggle">
+              <i class="fas fa-question-circle"></i>
+              Info
+            </a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-item"><div class="cell start"></div> Start node</li>
+              <li class="dropdown-item"><div class="cell target"></div> Target node</li>
+              <li class="dropdown-item"><div class="cell no-border-radius"></div> Unvisited node</li>
+              <li class="dropdown-item"><div class="cell no-border-radius"></div> Unvisited node</li>
+              <li class="dropdown-item no-animation"><div class="cell visited"></div> Visited node</li>
+              <li class="dropdown-item"><div class="cell visited path"></div> Shortest path</li>
+              <li class="dropdown-item"><div class="cell user-path"></div> User path</li>
+              <li class="dropdown-item completed-path"><div class="cell user-path"></div> Completed user path</li>
+              <li class="dropdown-item"><div class="cell wall"></div> Wall</li>
+            </ul>
+          </div>
         </li>
       </ul>
     </nav>

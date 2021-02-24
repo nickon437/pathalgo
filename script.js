@@ -44,7 +44,7 @@ $('#path-finding-dropdown').on('click', (e) => {
   }
 });
 
-$('#start-btn').on('click', () => {
+$('.start-btn').on('click', () => {
   if (app.start && app.target) {
     startPathFinding();
   }
@@ -74,7 +74,7 @@ $('#maze-generator-dropdown').on('click', async (e) => {
   }
 });
 
-$('#clear-dropdown').on('click', (e) => {
+$('.clear-dropdown').on('click', (e) => {
   if (e.target.classList.contains('dropdown-item')) {
     app.state = 'finished';
     clearSearchResult();
