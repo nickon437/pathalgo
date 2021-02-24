@@ -712,4 +712,4 @@ var e=arguments[3];if(require("core-js/shim"),require("regenerator-runtime/runti
 },{"./helper":"YaYI","./maze-generation/basic-rand-maze":"CUjb","./maze-generation/recursive-division":"P7vm","./maze-generation/mgDfs":"F2Nr"}],"mpVp":[function(require,module,exports) {
 "use strict";require("babel-polyfill");var e=u(require("./initBoard")),r=u(require("./initControlPanel")),l=u(require("./manual-control"));function u(e){return e&&e.__esModule?e:{default:e}}(0,e.default)(),(0,r.default)(),(0,l.default)();
 },{"babel-polyfill":"JIy0","./initBoard":"eAGF","./initControlPanel":"zsWF","./manual-control":"d2Wg"}]},{},["mpVp"], null)
-//# sourceMappingURL=/script.6f887ee5.js.map
+//# sourceMappingURL=script.6f887ee5.js.map
