@@ -6,8 +6,14 @@
 - Creating maze
 - Moving starting point and target
 - Re-calculating shortest path as board changes
+- Using arrow keys to manually navigate through the board
 - Creating board based on initial window's size
 
-## Algorithm:
-- [x] Breath first search
-- [x] Depth first search
+## Path-finding Algorithm:
+- [x] Breath-first search
+- [x] Depth-first search
+
+## Maze Gneration Algorithm:
+- [x] Random
+- [x] Recursive division
+- [x] Depth-first search
