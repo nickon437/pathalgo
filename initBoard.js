@@ -4,7 +4,7 @@ import {
   unmarkCellAsWall,
   rerenderPath,
   clearUserPath,
-} from './helper.js';
+} from './helper';
 
 const CELL_SIZE = 25;
 
@@ -155,11 +155,11 @@ const addStartAndTarget = () => {
   app.target.classList.add('target');
 };
 
-const init = () => {
+const initBoard = () => {
   buildBoard();
   mapBoarArr();
   mapNeighBours();
   addStartAndTarget();
 };
 
-export default init;
+export default initBoard;

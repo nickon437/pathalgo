@@ -1,6 +1,6 @@
-import dfs from './dfs.js';
-import bfs from './bfs.js';
-import { trimUserPath, removeUserPathHead } from './manual-control.js';
+import dfs from './path-finding/dfs';
+import bfs from './path-finding/bfs';
+import { trimUserPath, removeUserPathHead } from './manual-control';
 
 const app = {
   board: $('#board'),

@@ -1,4 +1,4 @@
-import { app, delay, markCellVisited, clearSearchResult } from './helper.js';
+import { app, delay, markCellVisited, clearSearchResult } from '../helper';
 
 const layPath = async (cell) => {
   if (app.isFirstRun) {
@@ -27,35 +27,39 @@ const visitCell = async (previous, cell) => {
     if (cell === app.target) {
       app.hasPath = true;
       layPath(app.target);
-      return;
     }
-
-    await search(cell);
+    return true;
   }
+  return false;
 };
 
 const search = async (cell) => {
   const DIRECTIONS = ['north', 'east', 'south', 'west'];
   for (const dir of DIRECTIONS) {
-    // Early termination if user clear while searching
-    if (app.state !== 'searching') {
-      clearSearchResult();
-      return;
-    }
-
     const neigh = cell.neigh[dir];
-    await visitCell(cell, neigh);
-
-    if (app.hasPath) {
-      break;
+    const isVisitable = await visitCell(cell, neigh);
+    if (isVisitable) {
+      app.queue.push(neigh);
     }
   }
+
+  if (app.hasPath || app.queue.length <= 0) {
+    return;
+  }
+
+  // Early termination if user clear while searching
+  if (app.state !== 'searching') {
+    clearSearchResult();
+    return;
+  }
+
+  await search(app.queue.shift());
 };
 
-const dfs = async () => {
+const bfs = async () => {
   markCellVisited(app.start);
 
-  await search(app.start);
+  await search(app.queue.shift());
 
   if (app.state !== 'searching') {
     return;
@@ -72,4 +76,4 @@ const dfs = async () => {
   app.state = 'finished';
 };
 
-export default dfs;
+export default bfs;

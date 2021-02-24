@@ -1,4 +1,4 @@
-import { app, delay, markCellAsWall } from '../helper.js';
+import { app, delay, markCellAsWall } from '../helper';
 
 const rand = (max) => Math.floor(Math.random() * max + 1);
 const randInRange = (min, max) => rand(max - min) + min - 1;

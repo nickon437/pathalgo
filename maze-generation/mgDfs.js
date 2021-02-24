@@ -4,7 +4,7 @@ import {
   markCellAsWall,
   rand,
   unmarkCellAsWall,
-} from '../helper.js';
+} from '../helper';
 
 const DIRECTIONS = ['north', 'east', 'south', 'west'];
 

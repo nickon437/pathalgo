@@ -1,4 +1,4 @@
-import { app, getLast } from './helper.js';
+import { app, getLast } from './helper';
 
 const markCellAsHead = (cell) => {
   app.userPathHead?.classList.remove('head');
