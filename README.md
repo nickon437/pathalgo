@@ -17,3 +17,8 @@
 - [x] Random
 - [x] Recursive division
 - [x] Depth-first search
+
+## Commands
+- `npm i` to setup the app and install dependencies
+- `npm run dev` to run code
+- `npm run build` to build a production version
