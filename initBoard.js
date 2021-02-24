@@ -65,7 +65,7 @@ const mapBoarArr = () => {
         } else {
           if (cell.isWall) {
             app.isSmashingWall = true;
-            unmarkCellAsWall(cell);
+            unmarkCellAsWall(cell, true);
           } else {
             markCellAsWall(cell, true);
           }
@@ -94,7 +94,7 @@ const mapBoarArr = () => {
             clearUserPath();
             rerenderPath();
           } else if (app.isSmashingWall) {
-            unmarkCellAsWall(cell);
+            unmarkCellAsWall(cell, true);
           } else {
             markCellAsWall(cell, true);
           }

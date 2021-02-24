@@ -37,6 +37,7 @@ const mgDfs = async () => {
   while (stack.length > 0) {
     const curCell = stack.pop();
 
+    // Find how many visitable nodes in 4 directions
     const unvisitedNeigh = [];
     for (const dir of DIRECTIONS) {
       const neigh = curCell.neigh[dir];

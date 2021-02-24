@@ -72,11 +72,14 @@ const markCellAsWall = (cell, shouldRerender = false) => {
   }
 };
 
-const unmarkCellAsWall = (cell) => {
+const unmarkCellAsWall = (cell, shouldRerender = false) => {
   cell.isWall = false;
   cell.classList.remove('wall');
   app.wallCells.filter((curCell) => curCell !== cell);
-  rerenderPath();
+
+  if (shouldRerender) {
+    rerenderPath();
+  }
 };
 
 const clearWalls = () => {
