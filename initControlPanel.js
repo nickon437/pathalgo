@@ -9,6 +9,7 @@ import {
 import buildBasicRandMaze from './maze-generation/basic-rand-maze';
 import buildRecursiveMaze from './maze-generation/recursive-division';
 import mgDfs from './maze-generation/mgDfs';
+import huntNKill from './maze-generation/hunt-n-kill';
 
 const initControlPanel = () => {
   $('.dropdown-box').on('click', (e) => {
@@ -65,6 +66,9 @@ const initControlPanel = () => {
           break;
         case 'mgDfs':
           await mgDfs();
+          break;
+        case 'huntNKill':
+          await huntNKill();
           break;
         default:
           break;
