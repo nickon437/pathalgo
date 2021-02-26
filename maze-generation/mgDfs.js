@@ -22,7 +22,7 @@ const isOneWayCell = (cell) => {
 };
 
 const markAllCellsAsWall = () => {
-  for (const cell of $('.cell').toArray()) {
+  for (const cell of $('.row .cell').toArray()) {
     markCellAsWall(cell);
   }
 };
