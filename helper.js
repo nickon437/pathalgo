@@ -22,7 +22,7 @@ const app = {
   visitedCells: [],
   wallCells: [],
 
-  state: 'waiting', // Possible states: waiitng, searching, finished
+  state: 'waiting', // Possible states: waiitng, generating-maze, searching, finished
 
   isMouseDown: false,
   isMovingStart: false,

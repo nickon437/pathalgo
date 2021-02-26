@@ -29,26 +29,29 @@ const initControlPanel = () => {
   });
 
   $('#path-finding-dropdown').on('click', (e) => {
-    switch (e.target.id) {
-      case 'bfs':
-      case 'dfs':
-        $('#path-finding-dropdown small').text(e.target.innerText);
-        app.selectedPathfindingAlgo = e.target.id;
-        break;
-      default:
-        break;
+    if (app.state !== 'searching') {
+      switch (e.target.id) {
+        case 'bfs':
+        case 'dfs':
+          $('#path-finding-dropdown small').text(e.target.innerText);
+          app.selectedPathfindingAlgo = e.target.id;
+          break;
+        default:
+          break;
+      }
+      rerenderPath();
     }
-    rerenderPath();
   });
 
   $('.start-btn').on('click', () => {
-    if (app.start && app.target) {
+    if (app.start && app.target && app.state === 'waiting') {
       startPathFinding();
     }
   });
 
   $('#maze-generator-dropdown').on('click', async (e) => {
-    if (e.target.classList.contains('dropdown-item')) {
+    if (e.target.classList.contains('dropdown-item') && app.state !== 'searching') {
+      app.state = 'generating-maze';
       clearSearchResult();
       clearWalls();
       clearUserPath();
@@ -68,6 +71,8 @@ const initControlPanel = () => {
       }
 
       rerenderPath();
+
+      app.state = app.visitedCells > 0 ? 'finished' : 'waiting';
     }
   });
 
