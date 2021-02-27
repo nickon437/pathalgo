@@ -29,7 +29,7 @@ const removeUserPathHead = () => {
   app.userPath = app.userPath.filter((curCell) => curCell !== app.userPathHead);
 
   if (app.userPath.length > 0) {
-    app.userPathHead = getLast(app.userPath);
+    markCellAsHead(getLast(app.userPath));
   } else {
     addUserPathHead(app.start);
   }

@@ -108,9 +108,7 @@ const clearSearchResult = () => {
 };
 
 const clearUserPath = () => {
-  while (app.userPathHead !== app.start || app.userPath.length !== 1) {
-    removeUserPathHead();
-  }
+  trimUserPath(app.start);
 };
 
 const startPathFinding = () => {
