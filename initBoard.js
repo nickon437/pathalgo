@@ -147,9 +147,9 @@ const mapNeighBours = () => {
 
 const addStartAndTarget = () => {
   app.start =
-    app.boardArr[Math.floor(app.numRow / 2)][Math.floor(app.numCol / 3)];
+    app.boardArr[Math.floor(app.numRow / 2)][Math.floor(app.numCol / 4)];
   app.target =
-    app.boardArr[Math.floor(app.numRow / 2)][Math.floor((app.numCol * 2) / 3)];
+    app.boardArr[Math.floor(app.numRow / 2)][Math.floor((app.numCol * 3) / 4)];
 
   app.start.classList.add('start');
   app.target.classList.add('target');

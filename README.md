@@ -24,6 +24,7 @@
 - [x] Random
 - [x] Recursive division
 - [x] Depth-first search
+- [x] Hunt and kill
 
 ## Commands
 
