@@ -8576,7 +8576,7 @@ var removeUserPathHead = function removeUserPathHead() {
   });
 
   if (_helper.app.userPath.length > 0) {
-    _helper.app.userPathHead = (0, _helper.getLast)(_helper.app.userPath);
+    markCellAsHead((0, _helper.getLast)(_helper.app.userPath));
   } else {
     addUserPathHead(_helper.app.start);
   }
@@ -8666,7 +8666,7 @@ var app = {
   visitedCells: [],
   wallCells: [],
   state: 'waiting',
-  // Possible states: waiitng, searching, finished
+  // Possible states: waiitng, generating-maze, searching, finished
   isMouseDown: false,
   isMovingStart: false,
   isMovingTarget: false,
@@ -8752,12 +8752,16 @@ var markCellAsWall = function markCellAsWall(cell) {
 exports.markCellAsWall = markCellAsWall;
 
 var unmarkCellAsWall = function unmarkCellAsWall(cell) {
+  var shouldRerender = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   cell.isWall = false;
   cell.classList.remove('wall');
   app.wallCells.filter(function (curCell) {
     return curCell !== cell;
   });
-  rerenderPath();
+
+  if (shouldRerender) {
+    rerenderPath();
+  }
 };
 
 exports.unmarkCellAsWall = unmarkCellAsWall;
@@ -8793,9 +8797,7 @@ var clearSearchResult = function clearSearchResult() {
 exports.clearSearchResult = clearSearchResult;
 
 var clearUserPath = function clearUserPath() {
-  while (app.userPathHead !== app.start || app.userPath.length !== 1) {
-    (0, _manualControl.removeUserPathHead)();
-  }
+  (0, _manualControl.trimUserPath)(app.start);
 };
 
 exports.clearUserPath = clearUserPath;
@@ -8909,7 +8911,7 @@ var mapBoarArr = function mapBoarArr() {
         } else {
           if (cell.isWall) {
             _helper.app.isSmashingWall = true;
-            (0, _helper.unmarkCellAsWall)(cell);
+            (0, _helper.unmarkCellAsWall)(cell, true);
           } else {
             (0, _helper.markCellAsWall)(cell, true);
           }
@@ -8944,7 +8946,7 @@ var mapBoarArr = function mapBoarArr() {
             (0, _helper.clearUserPath)();
             (0, _helper.rerenderPath)();
           } else if (_helper.app.isSmashingWall) {
-            (0, _helper.unmarkCellAsWall)(cell);
+            (0, _helper.unmarkCellAsWall)(cell, true);
           } else {
             (0, _helper.markCellAsWall)(cell, true);
           }
@@ -8995,8 +8997,8 @@ var mapNeighBours = function mapNeighBours() {
 };
 
 var addStartAndTarget = function addStartAndTarget() {
-  _helper.app.start = _helper.app.boardArr[Math.floor(_helper.app.numRow / 2)][Math.floor(_helper.app.numCol / 3)];
-  _helper.app.target = _helper.app.boardArr[Math.floor(_helper.app.numRow / 2)][Math.floor(_helper.app.numCol * 2 / 3)];
+  _helper.app.start = _helper.app.boardArr[Math.floor(_helper.app.numRow / 2)][Math.floor(_helper.app.numCol / 4)];
+  _helper.app.target = _helper.app.boardArr[Math.floor(_helper.app.numRow / 2)][Math.floor(_helper.app.numCol * 3 / 4)];
 
   _helper.app.start.classList.add('start');
 
@@ -9033,7 +9035,7 @@ var rand = function rand() {
 };
 
 var buildBasicRandMaze = function buildBasicRandMaze() {
-  var cells = $('.cell').toArray();
+  var cells = $('.row .cell').toArray();
 
   var _iterator = _createForOfIteratorHelper(cells),
       _step;
@@ -9042,7 +9044,7 @@ var buildBasicRandMaze = function buildBasicRandMaze() {
     for (_iterator.s(); !(_step = _iterator.n()).done;) {
       var cell = _step.value;
 
-      if (rand() >= 8 && cell !== _helper.app.start && cell !== _helper.app.target) {
+      if (rand() >= 7 && cell !== _helper.app.start && cell !== _helper.app.target) {
         (0, _helper.markCellAsWall)(cell);
       }
     }
@@ -9405,7 +9407,7 @@ var isOneWayCell = function isOneWayCell(cell) {
 };
 
 var markAllCellsAsWall = function markAllCellsAsWall() {
-  var _iterator2 = _createForOfIteratorHelper($('.cell').toArray()),
+  var _iterator2 = _createForOfIteratorHelper($('.row .cell').toArray()),
       _step2;
 
   try {
@@ -9439,7 +9441,8 @@ var mgDfs = /*#__PURE__*/function () {
               break;
             }
 
-            curCell = stack.pop();
+            curCell = stack.pop(); // Find how many visitable nodes in 4 directions
+
             unvisitedNeigh = [];
             _iterator3 = _createForOfIteratorHelper(DIRECTIONS);
 
@@ -9490,6 +9493,190 @@ var mgDfs = /*#__PURE__*/function () {
 
 var _default = mgDfs;
 exports.default = _default;
+},{"../helper":"helper.js"}],"maze-generation/hunt-n-kill.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _helper = require("../helper");
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var DIRECTIONS = ['north', 'east', 'south', 'west'];
+
+var randomizeStartingCell = function randomizeStartingCell() {
+  var rowIndex = (0, _helper.rand)(_helper.app.numRow) - 1;
+  var colIndex = (0, _helper.rand)(_helper.app.numCol) - 1;
+  return _helper.app.boardArr[rowIndex][colIndex];
+};
+
+var isOneWayCell = function isOneWayCell(cell) {
+  var numSurroundingWalls = 0;
+
+  var _iterator = _createForOfIteratorHelper(DIRECTIONS),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var dir = _step.value;
+      var neigh = cell.neigh[dir];
+
+      if (!neigh || neigh === _helper.app.start || neigh === _helper.app.target || neigh.isWall) {
+        numSurroundingWalls++;
+      }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  return numSurroundingWalls === 3;
+};
+
+var markAllCellsAsWall = function markAllCellsAsWall() {
+  var _iterator2 = _createForOfIteratorHelper($('.row .cell').toArray()),
+      _step2;
+
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var cell = _step2.value;
+      (0, _helper.markCellAsWall)(cell);
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+};
+
+var getNeighs = function getNeighs(cell, isWall) {
+  var neighs = [];
+
+  var _iterator3 = _createForOfIteratorHelper(DIRECTIONS),
+      _step3;
+
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var dir = _step3.value;
+      var neigh = cell.neigh[dir];
+
+      if (neigh && neigh.isWall === isWall && isOneWayCell(neigh)) {
+        neighs.push(neigh);
+      }
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+
+  return neighs;
+};
+
+var getRandNeigh = function getRandNeigh(cell, isWall) {
+  var neighs = getNeighs(cell, isWall);
+  var selectedIndex = (0, _helper.rand)(neighs.length) - 1;
+  return selectedIndex >= 0 ? neighs[selectedIndex] : null;
+};
+
+var walk = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(cell) {
+    var nextCell;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return (0, _helper.delay)(_helper.app.INSPECTING_CELL_DURATION);
+
+          case 2:
+            (0, _helper.unmarkCellAsWall)(cell);
+            nextCell = getRandNeigh(cell, true);
+
+            if (!nextCell) {
+              _context.next = 7;
+              break;
+            }
+
+            _context.next = 7;
+            return walk(nextCell);
+
+          case 7:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function walk(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+var hunt = function hunt() {
+  for (var rowIndex = 0; rowIndex < _helper.app.numRow; rowIndex++) {
+    for (var colIndex = 0; colIndex < _helper.app.numCol; colIndex++) {
+      var cell = _helper.app.boardArr[rowIndex][colIndex];
+
+      if (isOneWayCell(cell) && cell.isWall) {
+        return cell;
+      }
+    }
+  }
+};
+
+var huntNKill = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var startingCell;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            markAllCellsAsWall();
+            startingCell = randomizeStartingCell();
+
+          case 2:
+            if (!startingCell) {
+              _context2.next = 8;
+              break;
+            }
+
+            _context2.next = 5;
+            return walk(startingCell);
+
+          case 5:
+            startingCell = hunt();
+            _context2.next = 2;
+            break;
+
+          case 8:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function huntNKill() {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+var _default = huntNKill;
+exports.default = _default;
 },{"../helper":"helper.js"}],"initControlPanel.js":[function(require,module,exports) {
 "use strict";
 
@@ -9505,6 +9692,8 @@ var _basicRandMaze = _interopRequireDefault(require("./maze-generation/basic-ran
 var _recursiveDivision = _interopRequireDefault(require("./maze-generation/recursive-division"));
 
 var _mgDfs = _interopRequireDefault(require("./maze-generation/mgDfs"));
+
+var _huntNKill = _interopRequireDefault(require("./maze-generation/hunt-n-kill"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -9545,21 +9734,23 @@ var initControlPanel = function initControlPanel() {
     isMenuOpened ? parent.classList.remove('opened') : parent.classList.add('opened');
   });
   $('#path-finding-dropdown').on('click', function (e) {
-    switch (e.target.id) {
-      case 'bfs':
-      case 'dfs':
-        $('#path-finding-dropdown small').text(e.target.innerText);
-        _helper.app.selectedPathfindingAlgo = e.target.id;
-        break;
+    if (_helper.app.state !== 'searching') {
+      switch (e.target.id) {
+        case 'bfs':
+        case 'dfs':
+          $('#path-finding-dropdown small').text(e.target.innerText);
+          _helper.app.selectedPathfindingAlgo = e.target.id;
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
+
+      (0, _helper.rerenderPath)();
     }
-
-    (0, _helper.rerenderPath)();
   });
   $('.start-btn').on('click', function () {
-    if (_helper.app.start && _helper.app.target) {
+    if (_helper.app.start && _helper.app.target && _helper.app.state === 'waiting') {
       (0, _helper.startPathFinding)();
     }
   });
@@ -9569,43 +9760,52 @@ var initControlPanel = function initControlPanel() {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!e.target.classList.contains('dropdown-item')) {
-                _context.next = 17;
+              if (!(e.target.classList.contains('dropdown-item') && _helper.app.state !== 'searching')) {
+                _context.next = 22;
                 break;
               }
 
+              _helper.app.state = 'generating-maze';
               (0, _helper.clearSearchResult)();
               (0, _helper.clearWalls)();
               (0, _helper.clearUserPath)();
               _context.t0 = e.target.id;
-              _context.next = _context.t0 === 'random' ? 7 : _context.t0 === 'recursive-division' ? 9 : _context.t0 === 'mgDfs' ? 12 : 15;
+              _context.next = _context.t0 === 'random' ? 8 : _context.t0 === 'recursive-division' ? 10 : _context.t0 === 'mgDfs' ? 13 : _context.t0 === 'huntNKill' ? 16 : 19;
               break;
 
-            case 7:
+            case 8:
               (0, _basicRandMaze.default)();
-              return _context.abrupt("break", 16);
+              return _context.abrupt("break", 20);
 
-            case 9:
-              _context.next = 11;
+            case 10:
+              _context.next = 12;
               return (0, _recursiveDivision.default)();
 
-            case 11:
-              return _context.abrupt("break", 16);
-
             case 12:
-              _context.next = 14;
+              return _context.abrupt("break", 20);
+
+            case 13:
+              _context.next = 15;
               return (0, _mgDfs.default)();
 
-            case 14:
-              return _context.abrupt("break", 16);
-
             case 15:
-              return _context.abrupt("break", 16);
+              return _context.abrupt("break", 20);
 
             case 16:
-              (0, _helper.rerenderPath)();
+              _context.next = 18;
+              return (0, _huntNKill.default)();
 
-            case 17:
+            case 18:
+              return _context.abrupt("break", 20);
+
+            case 19:
+              return _context.abrupt("break", 20);
+
+            case 20:
+              (0, _helper.rerenderPath)();
+              _helper.app.state = _helper.app.visitedCells > 0 ? 'finished' : 'waiting';
+
+            case 22:
             case "end":
               return _context.stop();
           }
@@ -9638,7 +9838,7 @@ var initControlPanel = function initControlPanel() {
 
 var _default = initControlPanel;
 exports.default = _default;
-},{"./helper":"helper.js","./maze-generation/basic-rand-maze":"maze-generation/basic-rand-maze.js","./maze-generation/recursive-division":"maze-generation/recursive-division.js","./maze-generation/mgDfs":"maze-generation/mgDfs.js"}],"script.js":[function(require,module,exports) {
+},{"./helper":"helper.js","./maze-generation/basic-rand-maze":"maze-generation/basic-rand-maze.js","./maze-generation/recursive-division":"maze-generation/recursive-division.js","./maze-generation/mgDfs":"maze-generation/mgDfs.js","./maze-generation/hunt-n-kill":"maze-generation/hunt-n-kill.js"}],"script.js":[function(require,module,exports) {
 "use strict";
 
 require("babel-polyfill");
@@ -9682,7 +9882,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57062" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58674" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
